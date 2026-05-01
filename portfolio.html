@@ -1,128 +1,49 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>設計作品集 | ESD 伊莉莎白設計工作室</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="shared.css"/>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --ink:#1a1814;--dust:#f7f5f0;--warm:#ede8df;--gold:#c9a96e;--muted:#9a9088;--white:#fff;
-  --ease:cubic-bezier(0.16,1,0.3,1);
-}
-html{scroll-behavior:smooth}
-body{font-family:'DM Sans',sans-serif;background:var(--dust);color:var(--ink);overflow-x:hidden;cursor:none}
-.cur{position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:multiply}
-.cur-dot{width:8px;height:8px;background:var(--gold);border-radius:50%;transform:translate(-50%,-50%)}
-.cur-ring{width:36px;height:36px;border:1px solid var(--ink);border-radius:50%;transform:translate(-50%,-50%);transition:all .45s var(--ease);opacity:.5;position:absolute}
-.cur.hov .cur-ring{width:56px;height:56px;opacity:.15}
-
-nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.6rem 3.5rem;display:flex;justify-content:space-between;align-items:center;background:rgba(247,245,240,.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,169,110,.15)}
-.nav-logo{display:flex;flex-direction:column;text-decoration:none;color:var(--ink)}
-.nav-logo-en{font-size:.65rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold)}
-.nav-logo-zh{font-family:'Noto Serif TC',serif;font-size:1rem;font-weight:300;letter-spacing:.12em;margin-top:.1rem}
-.nav-links{display:flex;gap:2.2rem;list-style:none}
-.nav-links a{text-decoration:none;color:var(--ink);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;position:relative;padding-bottom:2px;transition:color .3s}
-.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width .4s var(--ease)}
-.nav-links a:hover,.nav-links a.active{color:var(--gold)}
-.nav-links a:hover::after,.nav-links a.active::after{width:100%}
-
-/* page hero */
-.page-hero{
-  padding:10rem 3.5rem 4rem;
-  background:var(--white);
-  border-bottom:1px solid rgba(201,169,110,.2);
-  display:flex;justify-content:space-between;align-items:flex-end;
-}
-.page-hero-left .eyebrow{font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
-.page-hero-left h1{font-family:'Noto Serif TC',serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:200;letter-spacing:.06em;line-height:1.15}
-.page-hero-right{font-size:.8rem;color:var(--muted);line-height:1.9;max-width:280px;text-align:right}
-
-/* filter */
-.filter-wrap{
-  position:sticky;top:72px;z-index:100;
-  background:rgba(247,245,240,.92);backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(201,169,110,.12);
-  padding:1rem 3.5rem;
-  display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;
-}
-.filter-label{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-right:.8rem}
-.filter-btn{
-  padding:.38rem 1.1rem;border:1px solid #ddd;border-radius:999px;
-  background:none;font-family:'DM Sans',sans-serif;font-size:.7rem;
-  letter-spacing:.08em;cursor:none;transition:all .25s;color:var(--muted);
-}
+.filter-bar{position:sticky;top:var(--nav-h);z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:.9rem 3rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.filter-label{font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-right:.6rem}
+.filter-btn{padding:.35rem 1rem;border:1px solid var(--line);background:none;font-family:'DM Sans',sans-serif;font-size:.65rem;letter-spacing:.1em;cursor:none;transition:all .25s;color:var(--muted);border-radius:0}
 .filter-btn:hover,.filter-btn.active{background:var(--ink);border-color:var(--ink);color:var(--white)}
-
-/* gallery */
-.gallery{padding:3rem 3.5rem 6rem;columns:3;column-gap:1.2rem}
-.gallery-item{
-  break-inside:avoid;margin-bottom:1.2rem;
-  position:relative;overflow:hidden;cursor:none;
-  opacity:0;transform:translateY(20px);
-  transition:opacity .6s var(--ease),transform .6s var(--ease);
-}
-.gallery-item.in{opacity:1;transform:translateY(0)}
-.gallery-item.hidden{display:none}
-.gallery-item img{width:100%;display:block;transition:transform .65s var(--ease)}
-.gallery-item:hover img{transform:scale(1.04)}
-.gallery-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(26,24,20,.75) 0%,transparent 55%);
-  opacity:0;transition:opacity .35s;
-  display:flex;align-items:flex-end;padding:1.2rem;
-}
-.gallery-item:hover .gallery-overlay{opacity:1}
-.gallery-cat{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.65)}
-.gallery-name{font-family:'Noto Serif TC',serif;font-size:1rem;font-weight:200;color:var(--white);margin-top:.25rem}
-
-/* count */
-.gallery-header{padding:1.5rem 3.5rem .5rem;display:flex;justify-content:space-between;align-items:center}
-.gallery-count{font-size:.7rem;color:var(--muted);letter-spacing:.1em}
-
-/* load more */
-.load-more-wrap{text-align:center;padding:2rem 0 5rem}
-.btn{display:inline-block;text-decoration:none;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;padding:.85rem 2rem;transition:all .35s var(--ease);cursor:none;border:1px solid var(--ink);color:var(--ink);background:none}
-.btn:hover{background:var(--ink);color:var(--white)}
-
-@media(max-width:960px){nav{padding:1.2rem 2rem}.nav-links{gap:1.5rem}.page-hero{flex-direction:column;gap:1.5rem;padding:8rem 2rem 3rem}.page-hero-right{text-align:left}.filter-wrap{padding:.8rem 2rem}.gallery{padding:2rem 2rem 5rem;columns:2}.gallery-header{padding:1rem 2rem}}
-@media(max-width:600px){.nav-links{display:none}.gallery{columns:1}}
+.gallery-wrap{padding:2.5rem 3rem 6rem;columns:3;column-gap:1rem}
+.gal-item{break-inside:avoid;margin-bottom:1rem;position:relative;overflow:hidden;cursor:none;opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.gal-item.in{opacity:1;transform:translateY(0)}
+.gal-item.hidden{display:none}
+.gal-item img{width:100%;display:block;transition:transform .65s var(--ease)}
+.gal-item:hover img{transform:scale(1.04)}
+.gal-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,18,16,.82) 0%,transparent 55%);opacity:0;transition:opacity .35s;display:flex;align-items:flex-end;padding:1.1rem 1.2rem}
+.gal-item:hover .gal-ov{opacity:1}
+.gal-cat{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.gal-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:300;color:var(--white);margin-top:.2rem}
+.gallery-header{padding:1.2rem 3rem .5rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+.gallery-count{font-size:.65rem;color:var(--muted);letter-spacing:.1em}
+@media(max-width:900px){.filter-bar{padding:.7rem 1.5rem}.gallery-wrap{padding:2rem 1.5rem 5rem;columns:2}.gallery-header{padding:1rem 1.5rem}}
+@media(max-width:580px){.gallery-wrap{columns:1}}
 </style>
 </head>
 <body>
-<div class="cur" id="cur">
-  <div class="cur-ring" id="curRing"></div>
-  <div class="cur-dot" id="curDot" style="position:absolute"></div>
-</div>
-
-<nav>
-  <a href="index.html" class="nav-logo">
-    <span class="nav-logo-en">Elizabeth Design Studio</span>
-    <span class="nav-logo-zh">伊莉莎白設計工作室</span>
-  </a>
+<div class="cur" id="cur"><div class="cur-ring" id="curRing"></div><div class="cur-dot" id="curDot"></div></div>
+<nav id="nav">
+  <a href="index.html" class="nav-logo" id="navLogo"><span class="nav-logo-zh" id="logoZh">伊莉莎白設計工作室</span><span class="nav-logo-en" id="logoEn">Elizabeth Design Studio</span></a>
   <ul class="nav-links">
     <li><a href="index.html">關於</a></li>
     <li><a href="portfolio.html" class="active">設計作品集</a></li>
     <li><a href="social.html">社群經營</a></li>
-    <li><a href="order.html">委託下單</a></li>
+    <li><a href="order.html" class="nav-order">委託下單</a></li>
     <li><a href="contact.html">與我聯絡</a></li>
   </ul>
 </nav>
-
 <div class="page-hero">
-  <div class="page-hero-left">
-    <p class="eyebrow">Portfolio</p>
-    <h1>設計作品集</h1>
-  </div>
-  <div class="page-hero-right">
-    歡迎探索，深入了解伊莉莎白工作室<br>所提供的設計服務與作品
-  </div>
+  <div class="page-hero-watermark">PORTFOLIO</div>
+  <span class="s-label" style="opacity:0;animation:fadeUp .7s var(--ease) .2s forwards">Portfolio</span>
+  <h1>設計<em>作品集</em></h1>
+  <p class="page-hero-sub">歡迎探索伊莉莎白工作室的設計作品，涵蓋品牌識別、刊物、社群視覺等多元領域。</p>
 </div>
-
-<div class="filter-wrap">
+<div class="filter-bar">
   <span class="filter-label">類型</span>
   <button class="filter-btn active" data-f="all">全部</button>
   <button class="filter-btn" data-f="publication">刊物設計</button>
@@ -133,176 +54,59 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.6rem 3.5rem;displa
   <button class="filter-btn" data-f="illustration">插畫</button>
   <button class="filter-btn" data-f="logo">LOGO 設計</button>
 </div>
-
-<div class="gallery-header">
-  <span class="gallery-count" id="count">顯示全部作品</span>
+<div class="gallery-header"><span class="gallery-count" id="galCount">顯示全部作品</span></div>
+<div class="gallery-wrap" id="gallery">
+  <div class="gal-item" data-cat="publication"><img src="https://static.wixstatic.com/media/8109e1_0e1e3e920103409a89917b30dbd67b21~mv2.jpg" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">刊物設計</div><div class="gal-name">品牌形象刊物</div></div></div></div>
+  <div class="gal-item" data-cat="publication"><img src="https://static.wixstatic.com/media/8109e1_9a8cd5709d73469ba543993265abfa6b~mv2.png" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">刊物設計</div><div class="gal-name">活動刊物</div></div></div></div>
+  <div class="gal-item" data-cat="publication"><img src="https://static.wixstatic.com/media/8109e1_76c05052a76e41b0aa73e4f0fe8b56a1~mv2.png" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">刊物設計</div><div class="gal-name">季刊封面</div></div></div></div>
+  <div class="gal-item" data-cat="publication"><img src="https://static.wixstatic.com/media/8109e1_7148770953d3473289b3c24119320a63~mv2.png" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">刊物設計</div><div class="gal-name">企業年報</div></div></div></div>
+  <div class="gal-item" data-cat="social"><img src="https://static.wixstatic.com/media/41ce05_c71574ff69be4d159ee963cf0ec80db9~mv2.jpg" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">社群圖片</div><div class="gal-name">Instagram 貼文</div></div></div></div>
+  <div class="gal-item" data-cat="social"><img src="https://static.wixstatic.com/media/41ce05_558a3d1412194867ad626b7151dfe293~mv2.jpg" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">社群圖片</div><div class="gal-name">品牌社群視覺</div></div></div></div>
+  <div class="gal-item" data-cat="social"><img src="https://static.wixstatic.com/media/41ce05_b7648cfa815c484cbf2646cbea6d5522~mv2.jpg" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">社群圖片</div><div class="gal-name">節慶貼文</div></div></div></div>
+  <div class="gal-item" data-cat="social"><img src="https://static.wixstatic.com/media/41ce05_227d36aeddaf4310b035a791550fdacf~mv2.jpg" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">社群圖片</div><div class="gal-name">限時動態</div></div></div></div>
+  <div class="gal-item" data-cat="poster"><img src="https://static.wixstatic.com/media/8109e1_4ee2aa64d29e4736bb7f7d68e0863f81~mv2.png" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">DM 海報設計</div><div class="gal-name">活動宣傳 DM</div></div></div></div>
+  <div class="gal-item" data-cat="poster"><img src="https://static.wixstatic.com/media/8109e1_baabbacfd9d749e69025d90aec715219~mv2.png" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">DM 海報設計</div><div class="gal-name">開幕活動海報</div></div></div></div>
+  <div class="gal-item" data-cat="poster"><img src="https://static.wixstatic.com/media/8109e1_8daf2c8b90fa476bb75343e136c4581c~mv2.jpg" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">DM 海報設計</div><div class="gal-name">特賣促銷海報</div></div></div></div>
+  <div class="gal-item" data-cat="banner"><img src="https://static.wixstatic.com/media/8109e1_5db962375a4b495bbe7d203b0794fe00~mv2.png" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">廣告 Banner</div><div class="gal-name">電商首頁 Banner</div></div></div></div>
+  <div class="gal-item" data-cat="banner"><img src="https://static.wixstatic.com/media/8109e1_f8006f0107e1418d8393ccc7aeeec8f1~mv2.jpg" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">廣告 Banner</div><div class="gal-name">Facebook 廣告</div></div></div></div>
+  <div class="gal-item" data-cat="product"><img src="https://static.wixstatic.com/media/8109e1_bc746d3d9398446888df8be8c230b2fc~mv2.jpg" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">商品說明頁</div><div class="gal-name">電商產品頁面</div></div></div></div>
+  <div class="gal-item" data-cat="product"><img src="https://static.wixstatic.com/media/8109e1_1f1ebf9466014ff99730c04132f00735~mv2.jpg" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">商品說明頁</div><div class="gal-name">美妝品說明頁</div></div></div></div>
+  <div class="gal-item" data-cat="logo"><img src="https://static.wixstatic.com/media/8109e1_be5bf47ede104ee7af5be78bfac6766f~mv2.jpg" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">LOGO 設計</div><div class="gal-name">品牌識別設計</div></div></div></div>
+  <div class="gal-item" data-cat="logo"><img src="https://static.wixstatic.com/media/8109e1_d20f2b17c733493895135c16f0b67b3e~mv2.png" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">LOGO 設計</div><div class="gal-name">餐飲品牌 LOGO</div></div></div></div>
+  <div class="gal-item" data-cat="logo"><img src="https://static.wixstatic.com/media/8109e1_6db002415d6648e0ad2367e8da7dd090~mv2.png" loading="lazy"/><div class="gal-ov"><div><div class="gal-cat">LOGO 設計</div><div class="gal-name">個人品牌 LOGO</div></div></div></div>
 </div>
-
-<!--
-  ★ 圖片使用說明：
-  1. 上傳圖片到 Cloudinary（免費 25GB）
-  2. 複製圖片 URL 貼到 src=""
-  3. data-cat 對應 filter 的 data-f 值
-  目前使用你 Wix 網站的圖片做示範
--->
-<div class="gallery" id="gallery">
-
-  <!-- 刊物設計 -->
-  <div class="gallery-item" data-cat="publication">
-    <img src="https://static.wixstatic.com/media/8109e1_0e1e3e920103409a89917b30dbd67b21~mv2.jpg" alt="刊物設計" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">刊物設計</div><div class="gallery-name">品牌形象刊物</div></div></div>
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-brand"><div class="footer-brand-logo">伊莉莎白設計工作室</div><span class="footer-brand-en">Elizabeth Design Studio</span><div class="footer-brand-desc">以設計為筆，呈現生活的美學與詩意。專注平面視覺設計的私人工作室。</div></div>
+    <div class="footer-col"><div class="footer-col-title">頁面</div><ul><li><a href="index.html">關於工作室</a></li><li><a href="portfolio.html">設計作品集</a></li><li><a href="social.html">社群經營</a></li><li><a href="order.html">委託下單</a></li><li><a href="contact.html">與我聯絡</a></li></ul></div>
+    <div class="footer-col"><div class="footer-col-title">聯絡</div><ul><li><a href="https://lin.ee/ocDYK0A" target="_blank">LINE @eds786</a></li><li><a href="https://instagram.com/elizabeth.design.tw" target="_blank">Instagram</a></li><li><a href="mailto:edsmichelle786@gmail.com">Email</a></li></ul></div>
   </div>
-  <div class="gallery-item" data-cat="publication">
-    <img src="https://static.wixstatic.com/media/8109e1_9a8cd5709d73469ba543993265abfa6b~mv2.png" alt="刊物設計" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">刊物設計</div><div class="gallery-name">活動刊物</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="publication">
-    <img src="https://static.wixstatic.com/media/8109e1_76c05052a76e41b0aa73e4f0fe8b56a1~mv2.png" alt="刊物設計" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">刊物設計</div><div class="gallery-name">季刊封面</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="publication">
-    <img src="https://static.wixstatic.com/media/8109e1_7148770953d3473289b3c24119320a63~mv2.png" alt="刊物設計" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">刊物設計</div><div class="gallery-name">企業年報</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="publication">
-    <img src="https://static.wixstatic.com/media/8109e1_a343b32c388d445aa415a98e89b2e897~mv2.png" alt="刊物設計" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">刊物設計</div><div class="gallery-name">課程手冊</div></div></div>
-  </div>
-
-  <!-- 社群圖片 -->
-  <div class="gallery-item" data-cat="social">
-    <img src="https://static.wixstatic.com/media/41ce05_c71574ff69be4d159ee963cf0ec80db9~mv2.jpg" alt="社群圖片" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">社群圖片</div><div class="gallery-name">Instagram 貼文</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="social">
-    <img src="https://static.wixstatic.com/media/41ce05_558a3d1412194867ad626b7151dfe293~mv2.jpg" alt="社群圖片" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">社群圖片</div><div class="gallery-name">品牌社群視覺</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="social">
-    <img src="https://static.wixstatic.com/media/41ce05_b7648cfa815c484cbf2646cbea6d5522~mv2.jpg" alt="社群圖片" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">社群圖片</div><div class="gallery-name">節慶貼文</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="social">
-    <img src="https://static.wixstatic.com/media/41ce05_227d36aeddaf4310b035a791550fdacf~mv2.jpg" alt="社群圖片" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">社群圖片</div><div class="gallery-name">限時動態</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="social">
-    <img src="https://static.wixstatic.com/media/8109e1_012e55b7f8fe44429f4a991e10a84cdf~mv2.jpg" alt="社群圖片" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">社群圖片</div><div class="gallery-name">品牌推廣</div></div></div>
-  </div>
-
-  <!-- DM 海報 -->
-  <div class="gallery-item" data-cat="poster">
-    <img src="https://static.wixstatic.com/media/8109e1_4ee2aa64d29e4736bb7f7d68e0863f81~mv2.png" alt="DM海報" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">DM 海報設計</div><div class="gallery-name">活動宣傳 DM</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="poster">
-    <img src="https://static.wixstatic.com/media/8109e1_baabbacfd9d749e69025d90aec715219~mv2.png" alt="DM海報" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">DM 海報設計</div><div class="gallery-name">開幕活動海報</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="poster">
-    <img src="https://static.wixstatic.com/media/8109e1_8daf2c8b90fa476bb75343e136c4581c~mv2.jpg" alt="DM海報" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">DM 海報設計</div><div class="gallery-name">特賣促銷海報</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="poster">
-    <img src="https://static.wixstatic.com/media/8109e1_71b7b6ecc68c482596b23e0ccecc19ed~mv2.png" alt="DM海報" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">DM 海報設計</div><div class="gallery-name">課程招生 DM</div></div></div>
-  </div>
-
-  <!-- Banner -->
-  <div class="gallery-item" data-cat="banner">
-    <img src="https://static.wixstatic.com/media/8109e1_5db962375a4b495bbe7d203b0794fe00~mv2.png" alt="Banner" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">廣告 Banner</div><div class="gallery-name">電商首頁 Banner</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="banner">
-    <img src="https://static.wixstatic.com/media/8109e1_f8006f0107e1418d8393ccc7aeeec8f1~mv2.jpg" alt="Banner" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">廣告 Banner</div><div class="gallery-name">Facebook 廣告</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="banner">
-    <img src="https://static.wixstatic.com/media/8109e1_49c59253be84424b8361acb9479480f7~mv2.png" alt="Banner" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">廣告 Banner</div><div class="gallery-name">節慶促銷 Banner</div></div></div>
-  </div>
-
-  <!-- 商品說明頁 -->
-  <div class="gallery-item" data-cat="product">
-    <img src="https://static.wixstatic.com/media/8109e1_bc746d3d9398446888df8be8c230b2fc~mv2.jpg" alt="商品說明頁" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">商品說明頁</div><div class="gallery-name">電商產品頁面</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="product">
-    <img src="https://static.wixstatic.com/media/8109e1_1f1ebf9466014ff99730c04132f00735~mv2.jpg" alt="商品說明頁" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">商品說明頁</div><div class="gallery-name">美妝品說明頁</div></div></div>
-  </div>
-
-  <!-- LOGO -->
-  <div class="gallery-item" data-cat="logo">
-    <img src="https://static.wixstatic.com/media/8109e1_be5bf47ede104ee7af5be78bfac6766f~mv2.jpg" alt="LOGO" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">LOGO 設計</div><div class="gallery-name">品牌識別設計</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="logo">
-    <img src="https://static.wixstatic.com/media/8109e1_d20f2b17c733493895135c16f0b67b3e~mv2.png" alt="LOGO" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">LOGO 設計</div><div class="gallery-name">餐飲品牌 LOGO</div></div></div>
-  </div>
-  <div class="gallery-item" data-cat="logo">
-    <img src="https://static.wixstatic.com/media/8109e1_6db002415d6648e0ad2367e8da7dd090~mv2.png" alt="LOGO" loading="lazy"/>
-    <div class="gallery-overlay"><div><div class="gallery-cat">LOGO 設計</div><div class="gallery-name">個人品牌 LOGO</div></div></div>
-  </div>
-
-</div>
-
-<footer style="background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:1.8rem 3.5rem;display:flex;justify-content:space-between;align-items:center">
-  <span style="font-size:.68rem;color:rgba(255,255,255,.35);letter-spacing:.1em">© 2026 Elizabeth Design Studio 伊莉莎白設計工作室</span>
-  <a href="order.html" style="font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);text-decoration:none">委託設計 →</a>
+  <div class="footer-bottom"><span class="footer-copy">© 2026 Elizabeth Design Studio 伊莉莎白設計工作室</span><div class="footer-social"><a href="https://instagram.com/elizabeth.design.tw" target="_blank">Instagram</a><a href="https://lin.ee/ocDYK0A" target="_blank">LINE</a><a href="mailto:edsmichelle786@gmail.com">Email</a></div></div>
 </footer>
-
 <script>
-const cur=document.getElementById('cur');
-const dot=document.getElementById('curDot');
-const ring=document.getElementById('curRing');
+const cur=document.getElementById('cur'),dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});
-(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
-document.querySelectorAll('a,button,.gallery-item').forEach(el=>{
-  el.addEventListener('mouseenter',()=>cur.classList.add('hov'));
-  el.addEventListener('mouseleave',()=>cur.classList.remove('hov'));
-});
-
-// Filter
-const btns=document.querySelectorAll('.filter-btn');
-const items=document.querySelectorAll('.gallery-item');
-const countEl=document.getElementById('count');
-
-function updateCount(){
-  const vis=[...items].filter(i=>!i.classList.contains('hidden')).length;
-  countEl.textContent=`顯示 ${vis} 件作品`;
-}
-
-btns.forEach(btn=>{
+(function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.gal-item').forEach(el=>{el.addEventListener('mouseenter',()=>cur.classList.add('hov'));el.addEventListener('mouseleave',()=>cur.classList.remove('hov'))});
+window.addEventListener('load',()=>{const zh=document.getElementById('logoZh'),en=document.getElementById('logoEn');const zhW=zh.getBoundingClientRect().width;en.style.letterSpacing='0px';const enW=en.scrollWidth;if(enW<zhW&&en.textContent.length>1)en.style.letterSpacing=((zhW-enW)/(en.textContent.length-1))+'px'});
+const items=document.querySelectorAll('.gal-item');
+const countEl=document.getElementById('galCount');
+document.querySelectorAll('.filter-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    btns.forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     const f=btn.dataset.f;
-    items.forEach(item=>{
-      const show=f==='all'||item.dataset.cat===f;
-      item.classList.toggle('hidden',!show);
-    });
-    updateCount();
-    // re-trigger reveal
-    setTimeout(()=>{
-      items.forEach(item=>{
-        if(!item.classList.contains('hidden'))item.classList.add('in');
-      });
-    },50);
+    let v=0;
+    items.forEach(item=>{const show=f==='all'||item.dataset.cat===f;item.classList.toggle('hidden',!show);if(show){v++;item.classList.add('in')}});
+    countEl.textContent=f==='all'?'顯示全部作品':'顯示 '+v+' 件作品';
   });
 });
-updateCount();
-
-// Scroll reveal
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach((e,i)=>{
-    if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),i*40);obs.unobserve(e.target)}
-  });
-},{threshold:.08});
+const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),i*40);obs.unobserve(e.target)}});},{threshold:.08});
 items.forEach(el=>obs.observe(el));
+// URL param filter
+const p=new URLSearchParams(location.search).get('cat');
+if(p){const btn=document.querySelector(`.filter-btn[data-f="${p}"]`);if(btn)btn.click()}
 </script>
 </body>
 </html>
