@@ -6,59 +6,132 @@
 <title>ESD 伊莉莎白設計工作室</title>
 <link rel="stylesheet" href="shared.css"/>
 <style>
-.hero{height:100vh;min-height:600px;padding-top:var(--nav-h);display:grid;grid-template-columns:1fr 1fr}
-.hero-left{display:flex;flex-direction:column;justify-content:center;padding:4rem 4rem 4rem 3rem;background:var(--white);position:relative}
-.hero-left::after{content:'';position:absolute;right:0;top:8%;bottom:8%;width:1px;background:var(--line)}
-.hero-eyebrow{font-size:.58rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;opacity:0;animation:fadeUp .7s var(--ease) .2s forwards}
-.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,5vw,5.5rem);font-weight:300;line-height:1.08;letter-spacing:.01em;margin-bottom:2rem;opacity:0;animation:fadeUp .9s var(--ease) .35s forwards}
-.hero-title em{font-style:italic;color:var(--gold)}
-.hero-desc{font-size:.82rem;line-height:2;color:var(--muted);max-width:340px;margin-bottom:3rem;opacity:0;animation:fadeUp .8s var(--ease) .5s forwards}
-.hero-btns{display:flex;gap:.8rem;opacity:0;animation:fadeUp .8s var(--ease) .65s forwards}
-.hero-right{position:relative;overflow:hidden;background:var(--warm)}
-.slide-frame{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:2.5rem}
-.slideshow-sq{width:100%;aspect-ratio:1/1;position:relative;overflow:hidden;background:var(--line);box-shadow:0 8px 40px rgba(0,0,0,.1)}
-.slide{position:absolute;inset:0;opacity:0;transition:opacity 1s var(--ease)}
+/* ══ HERO：全版圖片背景 ══ */
+.hero{
+  position:relative;height:100vh;min-height:620px;
+  overflow:hidden;display:flex;align-items:flex-end;
+}
+/* 輪播作為背景 */
+.hero-slides{position:absolute;inset:0;z-index:0}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s var(--ease)}
 .slide.active{opacity:1}
 .slide img{width:100%;height:100%;object-fit:cover;display:block}
-.slide-tag{position:absolute;bottom:1rem;left:1rem;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.9);background:rgba(20,18,16,.38);backdrop-filter:blur(6px);padding:.28rem .75rem}
-.slide-controls{position:absolute;bottom:1.5rem;right:1.5rem;display:flex;gap:.4rem;z-index:10}
-.slide-dot{width:18px;height:1.5px;background:rgba(255,255,255,.35);border:none;padding:0;cursor:none;transition:background .3s,width .35s}
-.slide-dot.active{background:var(--white);width:32px}
-.slide-num{position:absolute;top:1.5rem;right:1.5rem;font-size:.6rem;letter-spacing:.15em;color:rgba(255,255,255,.6)}
-.services-sec{padding:6rem 3rem;background:var(--white);border-top:1px solid var(--line)}
-.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line)}
-.svc-card{padding:2rem 1.8rem;border-right:1px solid var(--line);cursor:none;transition:background .3s;position:relative;overflow:hidden}
+/* 漸層遮罩：左下金白漸層 */
+.hero-overlay{
+  position:absolute;inset:0;z-index:1;
+  background:linear-gradient(
+    105deg,
+    rgba(255,255,255,.92) 0%,
+    rgba(255,255,255,.75) 35%,
+    rgba(255,248,235,.3) 60%,
+    transparent 100%
+  );
+}
+/* 文字區塊 */
+.hero-content{
+  position:relative;z-index:2;
+  padding:0 3rem 5rem;
+  max-width:640px;
+}
+.hero-eyebrow{
+  font-size:.56rem;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.8rem;
+  display:flex;align-items:center;gap:.8rem;
+  opacity:0;animation:fadeUp .7s var(--ease) .2s forwards;
+}
+.hero-eyebrow::before,.hero-eyebrow::after{
+  content:'';flex:1;max-width:40px;height:1px;background:var(--gold-line);
+}
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3.2rem,5.5vw,6rem);
+  font-weight:300;line-height:1.05;letter-spacing:.01em;
+  color:var(--ink);margin-bottom:1.6rem;
+  opacity:0;animation:fadeUp .9s var(--ease) .35s forwards;
+}
+.hero-title em{font-style:italic;color:var(--gold)}
+.hero-desc{
+  font-size:.82rem;line-height:2;
+  color:#5a5040;
+  max-width:360px;margin-bottom:2.8rem;
+  opacity:0;animation:fadeUp .8s var(--ease) .5s forwards;
+}
+.hero-btns{
+  display:flex;gap:.8rem;
+  opacity:0;animation:fadeUp .8s var(--ease) .65s forwards;
+}
+/* 右下角輪播控制 */
+.hero-controls{
+  position:absolute;bottom:2.5rem;right:2.8rem;z-index:3;
+  display:flex;flex-direction:column;align-items:flex-end;gap:.9rem;
+}
+.hero-slide-label{
+  font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink);opacity:.5;
+  background:rgba(255,255,255,.7);backdrop-filter:blur(4px);
+  padding:.28rem .8rem;border-left:2px solid var(--gold);
+}
+.slide-dots{display:flex;gap:.5rem}
+.slide-dot{
+  width:22px;height:1.5px;background:rgba(196,153,58,.3);
+  border:none;padding:0;cursor:none;
+  transition:background .3s,width .35s;
+}
+.slide-dot.active{background:var(--gold);width:38px}
+
+/* ══ SERVICES ══ */
+.services-sec{padding:6rem 3rem;background:var(--white);border-top:1px solid var(--gold-line)}
+.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--gold-line)}
+.svc-card{padding:2rem 1.8rem;border-right:1px solid var(--gold-line);cursor:none;transition:background .3s;position:relative;overflow:hidden}
 .svc-card:last-child{border-right:none}
 .svc-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease)}
-.svc-card:hover{background:var(--dust)}
+.svc-card:hover{background:rgba(196,153,58,.04)}
 .svc-card:hover::before{transform:scaleX(1)}
-.svc-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;margin-bottom:1.4rem;filter:grayscale(20%);transition:filter .4s}
+.svc-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;margin-bottom:1.4rem;filter:grayscale(15%);transition:filter .4s}
 .svc-card:hover .svc-img{filter:grayscale(0%)}
-.svc-tag{font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.45rem;display:block}
+.svc-tag{font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.45rem;display:block}
 .svc-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:300;letter-spacing:.04em;margin-bottom:.6rem;line-height:1.3}
 .svc-desc{font-size:.72rem;color:var(--muted);line-height:1.85}
-.marquee-sec{background:var(--gold-d);overflow:hidden;border-top:1px solid var(--gold-line);border-bottom:1px solid var(--gold-line)}
-.marquee-track{display:flex;animation:marquee 30s linear infinite;white-space:nowrap}
+
+/* ══ 跑馬燈 ══ */
+.marquee-sec{background:var(--white);overflow:hidden;border-top:1px solid var(--gold-line);border-bottom:1px solid var(--gold-line)}
+.marquee-track{display:flex;animation:marquee 32s linear infinite;white-space:nowrap}
 .marquee-track:hover{animation-play-state:paused}
-.mq-item{display:inline-flex;align-items:center;gap:1.2rem;padding:1.4rem 2.5rem;border-right:1px solid rgba(255,255,255,.06);text-decoration:none;flex-shrink:0;transition:background .25s}
-.mq-item:hover{background:rgba(255,255,255,.12)}
-.mq-num{font-size:.55rem;color:var(--gold);letter-spacing:.2em}
-.mq-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:300;letter-spacing:.1em;color:rgba(255,255,255,.9);transition:color .25s}
+.mq-item{display:inline-flex;align-items:center;gap:1rem;padding:1.2rem 2.2rem;border-right:1px solid var(--gold-line);text-decoration:none;flex-shrink:0;transition:background .25s}
+.mq-item:hover{background:var(--gold-bg)}
+.mq-num{font-size:.52rem;color:var(--gold);letter-spacing:.2em;font-weight:400}
+.mq-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:300;letter-spacing:.1em;color:var(--ink);transition:color .25s}
 .mq-item:hover .mq-name{color:var(--gold)}
-.mq-arr{font-size:.65rem;color:rgba(255,255,255,.2);transition:transform .25s,color .25s}
+.mq-arr{font-size:.6rem;color:var(--gold-line);transition:transform .25s,color .25s}
 .mq-item:hover .mq-arr{transform:translateX(4px);color:var(--gold)}
-.about-strip{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}
+
+/* ══ About ══ */
+.about-strip{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--gold-line)}
 .about-txt{padding:6rem 4rem 6rem 3rem;display:flex;flex-direction:column;justify-content:center;gap:1.2rem;background:var(--cream)}
-.about-p{font-size:.82rem;line-height:2;color:#666;max-width:420px}
-.about-note{font-size:.7rem;color:var(--muted);border-left:1.5px solid var(--gold);padding-left:1rem;line-height:1.85;margin-top:.4rem}
-.about-vis{position:relative;overflow:hidden;background:var(--gold-d)}
-.about-vis img{width:100%;height:100%;object-fit:cover;display:block;opacity:.55;mix-blend-mode:luminosity}
+.about-p{font-size:.82rem;line-height:2;color:#6a6050;max-width:420px}
+.about-note{font-size:.7rem;color:var(--muted);border-left:2px solid var(--gold);padding-left:1rem;line-height:1.85;margin-top:.4rem}
+.about-vis{position:relative;overflow:hidden;background:var(--ink)}
+.about-vis img{width:100%;height:100%;object-fit:cover;display:block;opacity:.5;mix-blend-mode:luminosity}
+.about-vis::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(196,153,58,.25) 0%,transparent 60%)}
 .about-num{position:absolute;bottom:2.5rem;left:2.5rem}
 .about-num-val{font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;color:var(--gold);line-height:1}
-.about-num-lab{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:.3rem}
-@media(max-width:1024px){.services-grid{grid-template-columns:1fr 1fr}.svc-card:nth-child(2){border-right:none}.svc-card:nth-child(3){border-right:1px solid var(--line);border-top:1px solid var(--line)}.svc-card:nth-child(4){border-right:none;border-top:1px solid var(--line)}}
-@media(max-width:900px){.hero{grid-template-columns:1fr;height:auto}.hero-left{padding:3rem 1.5rem}.hero-left::after{display:none}.hero-right{min-height:80vw}.slide-frame{padding:1.5rem}.services-sec{padding:4rem 1.5rem}.about-strip{grid-template-columns:1fr}.about-vis{height:260px}.about-txt{padding:4rem 1.5rem}}
-@media(max-width:640px){.hero-btns{flex-direction:column}.services-grid{grid-template-columns:1fr;border:none;gap:1px;background:var(--line)}.svc-card{border-right:none!important;border-top:none!important}}
+.about-num-lab{font-size:.56rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:.3rem}
+
+/* RWD */
+@media(max-width:1024px){.services-grid{grid-template-columns:1fr 1fr}.svc-card:nth-child(2){border-right:none}.svc-card:nth-child(3){border-right:1px solid var(--gold-line);border-top:1px solid var(--gold-line)}.svc-card:nth-child(4){border-right:none;border-top:1px solid var(--gold-line)}}
+@media(max-width:900px){
+  .hero{min-height:100svh}
+  .hero-content{padding:0 1.5rem 4rem}
+  .hero-overlay{background:linear-gradient(160deg,rgba(255,255,255,.93) 0%,rgba(255,255,255,.7) 50%,transparent 100%)}
+  .services-sec{padding:4rem 1.5rem}
+  .about-strip{grid-template-columns:1fr}.about-vis{height:280px}.about-txt{padding:4rem 1.5rem}
+  .hero-controls{right:1.5rem;bottom:1.5rem}
+}
+@media(max-width:640px){
+  .hero-btns{flex-direction:column;width:fit-content}
+  .services-grid{grid-template-columns:1fr;border:none;gap:1px;background:var(--gold-line)}
+  .svc-card{border-right:none!important;border-top:none!important}
+}
 </style>
 </head>
 <body>
@@ -77,27 +150,30 @@
   </ul>
 </nav>
 <section class="hero">
-  <div class="hero-left">
+  <!-- 背景輪播 -->
+  <div class="hero-slides" id="heroSlides">
+    <div class="slide active"><img src="https://static.wixstatic.com/media/8109e1_0e1e3e920103409a89917b30dbd67b21~mv2.jpg" alt="刊物設計"/></div>
+    <div class="slide"><img src="https://static.wixstatic.com/media/8109e1_4ee2aa64d29e4736bb7f7d68e0863f81~mv2.png" alt="DM海報設計"/></div>
+    <div class="slide"><img src="https://static.wixstatic.com/media/8109e1_be5bf47ede104ee7af5be78bfac6766f~mv2.jpg" alt="LOGO設計"/></div>
+    <div class="slide"><img src="https://static.wixstatic.com/media/41ce05_c71574ff69be4d159ee963cf0ec80db9~mv2.jpg" alt="社群圖片"/></div>
+    <div class="slide"><img src="https://static.wixstatic.com/media/8109e1_5db962375a4b495bbe7d203b0794fe00~mv2.png" alt="廣告Banner"/></div>
+  </div>
+  <!-- 漸層遮罩 -->
+  <div class="hero-overlay"></div>
+  <!-- 文字內容 -->
+  <div class="hero-content" style="padding-top:calc(var(--nav-h) + 2rem)">
     <p class="hero-eyebrow">Elizabeth Design Studio</p>
     <h1 class="hero-title">尋找<em>生活</em>的<br>美學與詩意</h1>
-    <p class="hero-desc">以設計為筆，簡約的線條和色彩，呈現生活的詩意。將繁複化為簡單的藝術，一起發現平凡中的驚喜。</p>
+    <p class="hero-desc">以設計為筆，簡約的線條和色彩，呈現生活的詩意。<br>將繁複化為簡單的藝術，一起發現平凡中的驚喜。</p>
     <div class="hero-btns">
       <a href="portfolio.html" class="btn btn-dark">探索作品集</a>
       <a href="order.html" class="btn btn-outline">委託設計</a>
     </div>
   </div>
-  <div class="hero-right">
-    <div class="slide-frame">
-      <div class="slideshow-sq" id="slideshowSq">
-        <div class="slide active"><span class="slide-tag">刊物設計</span><img src="https://static.wixstatic.com/media/8109e1_0e1e3e920103409a89917b30dbd67b21~mv2.jpg" alt=""/></div>
-        <div class="slide"><span class="slide-tag">DM 海報設計</span><img src="https://static.wixstatic.com/media/8109e1_4ee2aa64d29e4736bb7f7d68e0863f81~mv2.png" alt=""/></div>
-        <div class="slide"><span class="slide-tag">LOGO 設計</span><img src="https://static.wixstatic.com/media/8109e1_be5bf47ede104ee7af5be78bfac6766f~mv2.jpg" alt=""/></div>
-        <div class="slide"><span class="slide-tag">社群圖片</span><img src="https://static.wixstatic.com/media/41ce05_c71574ff69be4d159ee963cf0ec80db9~mv2.jpg" alt=""/></div>
-        <div class="slide"><span class="slide-tag">廣告 Banner</span><img src="https://static.wixstatic.com/media/8109e1_5db962375a4b495bbe7d203b0794fe00~mv2.png" alt=""/></div>
-        <div class="slide-num" id="slideNum">1 / 5</div>
-        <div class="slide-controls" id="slideDots"></div>
-      </div>
-    </div>
+  <!-- 右下角控制 -->
+  <div class="hero-controls">
+    <span class="hero-slide-label" id="heroLabel">刊物設計</span>
+    <div class="slide-dots" id="slideDots"></div>
   </div>
 </section>
 <section class="services-sec">
@@ -169,12 +245,31 @@ document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.le
 document.querySelectorAll('a,button,.svc-card').forEach(el=>{el.addEventListener('mouseenter',()=>cur.classList.add('hov'));el.addEventListener('mouseleave',()=>cur.classList.remove('hov'))});
 window.addEventListener('load',()=>{const zh=document.getElementById('logoZh'),en=document.getElementById('logoEn');const zhW=zh.getBoundingClientRect().width;en.style.letterSpacing='0px';const enW=en.scrollWidth;if(enW<zhW&&en.textContent.length>1)en.style.letterSpacing=((zhW-enW)/(en.textContent.length-1))+'px'});
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>20));
-const slides=document.querySelectorAll('.slide'),dotsWrap=document.getElementById('slideDots'),numEl=document.getElementById('slideNum');
+
+/* Slideshow */
+const slideLabels=['刊物設計','DM 海報設計','LOGO 設計','社群圖片','廣告 Banner'];
+const slides=document.querySelectorAll('.slide');
+const dotsWrap=document.getElementById('slideDots');
+const labelEl=document.getElementById('heroLabel');
 let cs=0,timer;
-slides.forEach((_,i)=>{const d=document.createElement('button');d.className='slide-dot'+(i===0?' active':'');d.addEventListener('click',()=>{goTo(i);resetTimer()});dotsWrap.appendChild(d)});
-function goTo(n){slides[cs].classList.remove('active');dotsWrap.children[cs].classList.remove('active');cs=(n+slides.length)%slides.length;slides[cs].classList.add('active');dotsWrap.children[cs].classList.add('active');numEl.textContent=(cs+1)+' / '+slides.length}
-function resetTimer(){clearInterval(timer);timer=setInterval(()=>goTo(cs+1),3800)}
+slides.forEach((_,i)=>{
+  const d=document.createElement('button');
+  d.className='slide-dot'+(i===0?' active':'');
+  d.addEventListener('click',()=>{goTo(i);resetTimer()});
+  dotsWrap.appendChild(d);
+});
+function goTo(n){
+  slides[cs].classList.remove('active');
+  dotsWrap.children[cs].classList.remove('active');
+  cs=(n+slides.length)%slides.length;
+  slides[cs].classList.add('active');
+  dotsWrap.children[cs].classList.add('active');
+  if(labelEl) labelEl.textContent=slideLabels[cs];
+}
+function resetTimer(){clearInterval(timer);timer=setInterval(()=>goTo(cs+1),4200)}
 resetTimer();
+
+/* Reveal */
 const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),i*80);obs.unobserve(e.target)}});},{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 </script>
