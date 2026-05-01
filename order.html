@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>委託下單 | ESD 伊莉莎白設計工作室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1814;--dust:#f7f5f0;--warm:#ede8df;--gold:#c9a96e;--muted:#9a9088;--white:#fff;--ease:cubic-bezier(0.16,1,0.3,1)}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--dust);color:var(--ink);overflow-x:hidden;cursor:none}
+
+.cur{position:fixed;pointer-events:none;z-index:9999}
+.cur-dot{width:8px;height:8px;background:var(--gold);border-radius:50%;position:absolute;transform:translate(-50%,-50%)}
+.cur-ring{width:36px;height:36px;border:1.5px solid var(--ink);border-radius:50%;position:absolute;transform:translate(-50%,-50%);transition:width .4s var(--ease),height .4s,opacity .4s;opacity:.4}
+.cur.hov .cur-ring{width:56px;height:56px;opacity:.12}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 3.5rem;height:72px;display:flex;justify-content:space-between;align-items:center;background:rgba(247,245,240,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(201,169,110,.18)}
+.nav-logo{text-decoration:none;color:var(--ink);display:flex;flex-direction:column;align-items:flex-start;gap:.08rem}
+.nav-logo-zh{font-family:'Noto Serif TC',serif;font-size:.92rem;font-weight:300;letter-spacing:.13em;white-space:nowrap;display:block}
+.nav-logo-en{font-size:.58rem;text-transform:uppercase;color:var(--gold);white-space:nowrap;display:block}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{text-decoration:none;color:var(--ink);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;position:relative;padding-bottom:2px;transition:color .3s}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width .4s var(--ease)}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+
+/* Page Hero */
+.page-hero{
+  height:42vh;min-height:300px;padding-top:72px;
+  background:var(--ink);
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding-left:3.5rem;padding-right:3.5rem;padding-bottom:3.5rem;
+  position:relative;overflow:hidden;
+}
+.page-hero::before{content:'ORDER';position:absolute;right:-1rem;top:50%;transform:translateY(-55%);font-family:'Noto Serif TC',serif;font-size:18vw;font-weight:200;color:rgba(255,255,255,.03);pointer-events:none;white-space:nowrap}
+.eyebrow{font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;opacity:0;animation:fadeUp .7s var(--ease) .2s forwards}
+.page-hero h1{font-family:'Noto Serif TC',serif;font-size:clamp(2rem,4.5vw,4rem);font-weight:200;color:var(--white);line-height:1.15;letter-spacing:.06em;opacity:0;animation:fadeUp .85s var(--ease) .35s forwards}
+.page-hero h1 span{color:var(--gold)}
+.page-hero-desc{font-size:.82rem;color:rgba(255,255,255,.45);margin-top:1rem;opacity:0;animation:fadeUp .8s var(--ease) .5s forwards}
+
+/* Steps bar */
+.steps-bar{
+  background:var(--white);
+  border-bottom:1px solid rgba(201,169,110,.15);
+  padding:1.2rem 3.5rem;
+  display:flex;gap:0;
+}
+.step-item{
+  display:flex;align-items:center;gap:.7rem;
+  padding:.5rem 2rem .5rem 0;
+  font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);position:relative;
+}
+.step-item::after{content:'→';margin-left:.8rem;color:#ddd}
+.step-item:last-child::after{display:none}
+.step-item.done .step-num{background:var(--gold);color:var(--white)}
+.step-item.active .step-num{background:var(--ink);color:var(--white)}
+.step-item.active{color:var(--ink)}
+.step-num{
+  width:24px;height:24px;border-radius:50%;
+  background:#e8e8e8;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:500;
+  flex-shrink:0;transition:background .3s;
+}
+
+/* Main layout */
+.order-wrap{
+  display:grid;grid-template-columns:1fr 360px;
+  gap:0;min-height:calc(100vh - 72px - 42vh - 56px);
+  align-items:start;
+}
+
+/* Left: service picker */
+.picker{
+  padding:3rem 3rem 4rem 3.5rem;
+  border-right:1px solid rgba(201,169,110,.15);
+}
+.picker-title{
+  font-family:'Noto Serif TC',serif;
+  font-size:1.3rem;font-weight:200;letter-spacing:.07em;
+  margin-bottom:.5rem;
+}
+.picker-sub{font-size:.76rem;color:var(--muted);margin-bottom:2rem;line-height:1.7}
+
+.service-list{display:flex;flex-direction:column;gap:.8rem;margin-bottom:3rem}
+.service-row{
+  display:grid;grid-template-columns:auto 1fr auto auto;
+  align-items:center;gap:1.2rem;
+  padding:1.2rem 1.4rem;
+  background:var(--white);
+  border:1.5px solid transparent;
+  cursor:none;
+  transition:border-color .25s,background .25s,transform .2s;
+}
+.service-row:hover{border-color:rgba(201,169,110,.4);background:var(--dust)}
+.service-row.selected{border-color:var(--gold);background:rgba(201,169,110,.06)}
+.service-row-icon{font-size:1.4rem;width:40px;text-align:center}
+.service-row-info{}
+.service-row-name{font-family:'Noto Serif TC',serif;font-size:.95rem;font-weight:300;letter-spacing:.05em;margin-bottom:.2rem}
+.service-row-desc{font-size:.7rem;color:var(--muted)}
+.service-row-qty{
+  display:flex;align-items:center;gap:.5rem;
+}
+.qty-btn{
+  width:28px;height:28px;border:1px solid #ddd;background:none;
+  font-size:.9rem;cursor:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;color:var(--ink);
+}
+.qty-btn:hover{border-color:var(--gold);color:var(--gold)}
+.qty-num{font-size:.85rem;min-width:18px;text-align:center;font-weight:500}
+.service-row-add{
+  width:32px;height:32px;border:none;
+  background:var(--ink);color:var(--white);
+  font-size:.8rem;cursor:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .25s;flex-shrink:0;
+}
+.service-row-add:hover{background:var(--gold)}
+.service-row.selected .service-row-add{background:var(--gold)}
+
+/* Details form */
+.detail-form{margin-top:0}
+.detail-title{
+  font-family:'Noto Serif TC',serif;
+  font-size:1.3rem;font-weight:200;letter-spacing:.07em;
+  margin-bottom:.5rem;
+}
+.detail-sub{font-size:.76rem;color:var(--muted);margin-bottom:2rem;line-height:1.7}
+.fg{margin-bottom:1.5rem}
+.fg label{display:block;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+.fg label span{color:var(--gold);margin-left:.2rem}
+.fg input,.fg textarea,.fg select{
+  width:100%;border:none;border-bottom:1.5px solid #ddd;
+  padding:.65rem 0;font-family:'DM Sans',sans-serif;font-size:.86rem;
+  background:none;outline:none;color:var(--ink);
+  transition:border-color .3s;appearance:none;
+}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--gold)}
+.fg textarea{resize:none;height:90px;line-height:1.7}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.radio-group{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.3rem}
+.radio-opt{
+  padding:.38rem 1rem;border:1.5px solid #ddd;
+  font-size:.72rem;letter-spacing:.06em;cursor:none;
+  transition:all .2s;color:var(--muted);
+  user-select:none;
+}
+.radio-opt.selected{border-color:var(--gold);background:rgba(201,169,110,.08);color:var(--ink)}
+
+/* Right: cart */
+.cart{
+  position:sticky;top:72px;
+  background:var(--white);
+  border-left:1px solid rgba(201,169,110,.15);
+  padding:2.5rem 2rem;
+  min-height:300px;
+}
+.cart-title{
+  font-family:'Noto Serif TC',serif;
+  font-size:1.1rem;font-weight:200;letter-spacing:.08em;
+  margin-bottom:1.5rem;
+  padding-bottom:1rem;
+  border-bottom:1px solid #eee;
+  display:flex;justify-content:space-between;align-items:baseline;
+}
+.cart-count{
+  font-size:.62rem;letter-spacing:.15em;color:var(--gold);
+}
+.cart-empty{
+  text-align:center;padding:3rem 1rem;
+  color:var(--muted);font-size:.8rem;line-height:2;
+}
+.cart-empty-icon{font-size:2rem;margin-bottom:.8rem;opacity:.4}
+.cart-items{display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.5rem}
+.cart-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.7rem .8rem;background:var(--dust);gap:.8rem;
+}
+.cart-item-name{font-size:.8rem;font-family:'Noto Serif TC',serif;font-weight:300}
+.cart-item-qty{
+  font-size:.7rem;color:var(--muted);
+  background:var(--warm);padding:.18rem .55rem;white-space:nowrap;
+}
+.cart-item-del{
+  background:none;border:none;color:#ccc;font-size:.85rem;
+  cursor:none;transition:color .2s;flex-shrink:0;padding:0 .2rem;
+}
+.cart-item-del:hover{color:#e55}
+
+.cart-divider{border:none;border-top:1px solid #eee;margin:1rem 0}
+
+.cart-info{
+  background:rgba(201,169,110,.06);
+  border-left:2px solid var(--gold);
+  padding:.8rem 1rem;
+  font-size:.72rem;color:#888;line-height:1.8;
+  margin-bottom:1.5rem;
+}
+
+.submit-btn{
+  width:100%;
+  padding:1.1rem;
+  background:var(--ink);color:var(--white);
+  border:none;font-family:'DM Sans',sans-serif;
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  cursor:none;
+  display:flex;align-items:center;justify-content:center;gap:.7rem;
+  transition:background .35s var(--ease);
+}
+.submit-btn:hover{background:var(--gold)}
+.submit-btn:disabled{background:#ccc;cursor:not-allowed}
+.submit-btn svg{flex-shrink:0}
+
+.line-note{
+  font-size:.65rem;color:var(--muted);text-align:center;
+  margin-top:.8rem;line-height:1.7;
+}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:var(--white);
+  padding:.8rem 1.8rem;font-size:.78rem;letter-spacing:.08em;
+  opacity:0;transition:all .4s var(--ease);z-index:1000;pointer-events:none;
+  white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.05);padding:2rem 3.5rem;display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:.68rem;color:rgba(255,255,255,.3);letter-spacing:.08em}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:.68rem;color:rgba(255,255,255,.4);text-decoration:none;letter-spacing:.1em;transition:color .3s}
+.footer-links a:hover{color:var(--gold)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:960px){
+  nav{padding:0 2rem}
+  .page-hero{padding:8rem 2rem 3rem}
+  .steps-bar{padding:.8rem 2rem;gap:0;overflow-x:auto}
+  .order-wrap{grid-template-columns:1fr}
+  .picker{padding:2.5rem 2rem 3rem;border-right:none;border-bottom:1px solid rgba(201,169,110,.15)}
+  .cart{position:static;border-left:none;border-top:1px solid rgba(201,169,110,.15);padding:2rem}
+  .fg-row{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:1rem;padding:1.5rem 2rem;text-align:center}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  .service-row{grid-template-columns:auto 1fr auto;gap:.8rem}
+  .service-row-add{display:none}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="cur"><div class="cur-ring" id="curRing"></div><div class="cur-dot" id="curDot"></div></div>
+
+<nav>
+  <a href="index.html" class="nav-logo" id="navLogo">
+    <span class="nav-logo-zh" id="logoZh">伊莉莎白設計工作室</span>
+    <span class="nav-logo-en" id="logoEn">Elizabeth Design Studio</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">關於</a></li>
+    <li><a href="portfolio.html">設計作品集</a></li>
+    <li><a href="social.html">社群經營</a></li>
+    <li><a href="order.html" class="active">委託下單</a></li>
+    <li><a href="contact.html">與我聯絡</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<div class="page-hero">
+  <p class="eyebrow">Order</p>
+  <h1>選擇服務，填寫需求<br>一鍵傳送到 <span>LINE</span></h1>
+  <p class="page-hero-desc">選好項目後填寫設計需求，送出後將自動開啟 LINE 並帶入完整需求內容。</p>
+</div>
+
+<!-- Steps -->
+<div class="steps-bar">
+  <div class="step-item active" id="step1"><span class="step-num" id="stepNum1">1</span>選擇服務</div>
+  <div class="step-item" id="step2"><span class="step-num" id="stepNum2">2</span>填寫需求</div>
+  <div class="step-item" id="step3"><span class="step-num" id="stepNum3">3</span>傳送 LINE</div>
+</div>
+
+<div class="order-wrap">
+
+  <!-- Left -->
+  <div class="picker" id="pickerPanel">
+
+    <!-- STEP 1: 選擇服務 -->
+    <div id="servicePanel">
+      <h2 class="picker-title">選擇設計服務</h2>
+      <p class="picker-sub">點選想要的服務加入清單，可同時選擇多項。<br>右側購物車會即時更新。</p>
+
+      <div class="service-list">
+        <div class="service-row" data-id="publication" data-name="刊物設計">
+          <div class="service-row-icon">📖</div>
+          <div class="service-row-info">
+            <div class="service-row-name">刊物設計</div>
+            <div class="service-row-desc">雜誌、手冊、型錄、企業刊物等平面排版設計</div>
+          </div>
+          <div class="service-row-qty">
+            <button class="qty-btn" data-action="minus" data-id="publication">－</button>
+            <span class="qty-num" id="qty-publication">0</span>
+            <button class="qty-btn" data-action="plus" data-id="publication">＋</button>
+          </div>
+          <button class="service-row-add" data-id="publication">＋</button>
+        </div>
+
+        <div class="service-row" data-id="social" data-name="社群圖片">
+          <div class="service-row-icon">📱</div>
+          <div class="service-row-info">
+            <div class="service-row-name">社群圖片</div>
+            <div class="service-row-desc">IG／FB 貼文、限時動態、封面圖設計</div>
+          </div>
+          <div class="service-row-qty">
+            <button class="qty-btn" data-action="minus" data-id="social">－</button>
+            <span class="qty-num" id="qty-social">0</span>
+            <button class="qty-btn" data-action="plus" data-id="social">＋</button>
+          </div>
+          <button class="service-row-add" data-id="social">＋</button>
+        </div>
+
+        <div class="service-row" data-id="poster" data-name="DM 海報設計">
+          <div class="service-row-icon">🎨</div>
+          <div class="service-row-info">
+            <div class="service-row-name">DM 海報設計</div>
+            <div class="service-row-desc">活動、開幕、促銷等各式海報與傳單設計</div>
+          </div>
+          <div class="service-row-qty">
+            <button class="qty-btn" data-action="minus" data-id="poster">－</button>
+            <span class="qty-num" id="qty-poster">0</span>
+            <button class="qty-btn" data-action="plus" data-id="poster">＋</button>
+          </div>
+          <button class="service-row-add" data-id="poster">＋</button>
+        </div>
+
+        <div class="service-row" data-id="banner" data-name="廣告 Banner 設計">
+          <div class="service-row-icon">🖼️</div>
+          <div class="service-row-info">
+            <div class="service-row-name">廣告 Banner 設計</div>
+            <div class="service-row-desc">電商平台、FB／IG 廣告橫幅設計</div>
+          </div>
+          <div class="service-row-qty">
+            <button class="qty-btn" data-action="minus" data-id="banner">－</button>
+            <span class="qty-num" id="qty-banner">0</span>
+            <button class="qty-btn" data-action="plus" data-id="banner">＋</button>
+          </div>
+          <button class="service-row-add" data-id="banner">＋</button>
+        </div>
+
+        <div class="service-row" data-id="product" data-name="商品說明頁設計">
+          <div class="service-row-icon">🛍️</div>
+          <div class="service-row-info">
+            <div class="service-row-name">商品說明頁設計</div>
+            <div class="service-row-desc">蝦皮、Pinkoi 等電商商品主圖與說明頁排版</div>
+          </div>
+          <div class="service-row-qty">
+            <button class="qty-btn" data-action="minus" data-id="product">－</button>
+            <span class="qty-num" id="qty-product">0</span>
+            <button class="qty-btn" data-action="plus" data-id="product">＋</button>
+          </div>
+          <button class="service-row-add" data-id="product">＋</button>
+        </div>
+
+        <div class="service-row" data-id="illustration" data-name="插畫">
+          <div class="service-row-icon">✏️</div>
+          <div class="service-row-info">
+            <div class="service-row-name">插畫</div>
+            <div class="service-row-desc">客製化插畫、人物、場景、商品插圖設計</div>
+          </div>
+          <div class="service-row-qty">
+            <button class="qty-btn" data-action="minus" data-id="illustration">－</button>
+            <span class="qty-num" id="qty-illustration">0</span>
+            <button class="qty-btn" data-action="plus" data-id="illustration">＋</button>
+          </div>
+          <button class="service-row-add" data-id="illustration">＋</button>
+        </div>
+
+        <div class="service-row" data-id="logo" data-name="LOGO 設計">
+          <div class="service-row-icon">⭐</div>
+          <div class="service-row-info">
+            <div class="service-row-name">LOGO 設計</div>
+            <div class="service-row-desc">品牌 LOGO、商標、識別系統設計</div>
+          </div>
+          <div class="service-row-qty">
+            <button class="qty-btn" data-action="minus" data-id="logo">－</button>
+            <span class="qty-num" id="qty-logo">0</span>
+            <button class="qty-btn" data-action="plus" data-id="logo">＋</button>
+          </div>
+          <button class="service-row-add" data-id="logo">＋</button>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="toDetailBtn" disabled>
+        下一步：填寫需求
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <!-- STEP 2: 填寫需求 -->
+    <div id="detailPanel" style="display:none">
+      <h2 class="picker-title">填寫設計需求</h2>
+      <p class="picker-sub">以下資訊將直接傳送到 LINE，請盡量填寫詳細，讓我可以更快速地回覆您！</p>
+
+      <div class="fg-row">
+        <div class="fg">
+          <label>您的姓名 <span>*</span></label>
+          <input type="text" id="f_name" placeholder="王小明"/>
+        </div>
+        <div class="fg">
+          <label>Line ID / 電話 <span>*</span></label>
+          <input type="text" id="f_contact" placeholder="@yourline 或 0912-xxx-xxx"/>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>使用用途 <span>*</span></label>
+        <div class="radio-group" id="purposeGroup">
+          <div class="radio-opt" data-val="Instagram 貼文">IG 貼文</div>
+          <div class="radio-opt" data-val="Facebook 貼文">FB 貼文</div>
+          <div class="radio-opt" data-val="印刷輸出">印刷輸出</div>
+          <div class="radio-opt" data-val="電商平台">電商平台</div>
+          <div class="radio-opt" data-val="活動宣傳">活動宣傳</div>
+          <div class="radio-opt" data-val="品牌識別">品牌識別</div>
+          <div class="radio-opt" data-val="其他">其他</div>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>風格偏好</label>
+        <div class="radio-group" id="styleGroup">
+          <div class="radio-opt" data-val="簡約清新">簡約清新</div>
+          <div class="radio-opt" data-val="溫暖自然">溫暖自然</div>
+          <div class="radio-opt" data-val="活潑繽紛">活潑繽紛</div>
+          <div class="radio-opt" data-val="高質感深色系">高質感深色系</div>
+          <div class="radio-opt" data-val="插畫手繪風">插畫手繪風</div>
+          <div class="radio-opt" data-val="現代商業感">現代商業感</div>
+        </div>
+      </div>
+
+      <div class="fg-row">
+        <div class="fg">
+          <label>希望完成日期</label>
+          <input type="date" id="f_date"/>
+        </div>
+        <div class="fg">
+          <label>預算範圍</label>
+          <select id="f_budget">
+            <option value="">不確定，請報價</option>
+            <option>$500 以下</option>
+            <option>$500 – $1,500</option>
+            <option>$1,500 – $3,000</option>
+            <option>$3,000 – $5,000</option>
+            <option>$5,000 以上</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>品牌 / 公司名稱</label>
+        <input type="text" id="f_brand" placeholder="您的品牌或公司名稱（選填）"/>
+      </div>
+
+      <div class="fg">
+        <label>需求說明 <span>*</span></label>
+        <textarea id="f_desc" placeholder="請描述您的設計需求，例如：主題、文案內容、需要幾個版本、有無參考圖等…"></textarea>
+      </div>
+
+      <div class="fg">
+        <label>參考風格連結</label>
+        <input type="text" id="f_ref" placeholder="Pinterest、IG 或其他參考連結（選填）"/>
+      </div>
+
+      <div style="display:flex;gap:1rem;margin-top:.5rem">
+        <button class="submit-btn" id="backBtn" style="background:transparent;border:1.5px solid var(--ink);color:var(--ink);flex:0 0 auto;width:auto;padding:.9rem 1.5rem">
+          ← 返回
+        </button>
+        <button class="submit-btn" id="sendLineBtn" style="flex:1">
+          傳送到 LINE
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right: Cart -->
+  <div class="cart">
+    <div class="cart-title">
+      委託清單
+      <span class="cart-count" id="cartCount">0 項</span>
+    </div>
+
+    <div id="cartEmpty" class="cart-empty">
+      <div class="cart-empty-icon">🛒</div>
+      尚未選擇任何服務<br>請從左側點選想委託的項目
+    </div>
+
+    <div id="cartItems" class="cart-items" style="display:none"></div>
+
+    <hr class="cart-divider" id="cartDivider" style="display:none"/>
+
+    <div class="cart-info">
+      📌 選好服務後，填寫需求說明，系統會自動整理成訊息傳送到 LINE。
+    </div>
+
+    <div id="cartSummary" style="display:none;margin-bottom:1.2rem">
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:.5rem;letter-spacing:.08em;text-transform:uppercase">已選服務</div>
+      <div id="summaryList" style="font-size:.82rem;line-height:2;color:var(--ink)"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <span class="footer-copy">© 2026 Elizabeth Design Studio 伊莉莎白設計工作室</span>
+  <div class="footer-links">
+    <a href="https://instagram.com/elizabeth.design.tw" target="_blank">Instagram</a>
+    <a href="https://lin.ee/ocDYK0A" target="_blank">LINE</a>
+    <a href="mailto:edsmichelle786@gmail.com">Email</a>
+  </div>
+</footer>
+
+<script>
+/* ── Cursor ── */
+const cur=document.getElementById('cur'),dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});
+(function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.service-row,.radio-opt').forEach(el=>{el.addEventListener('mouseenter',()=>cur.classList.add('hov'));el.addEventListener('mouseleave',()=>cur.classList.remove('hov'))});
+
+/* ── Logo width match ── */
+window.addEventListener('load',()=>{
+  const zh=document.getElementById('logoZh'),en=document.getElementById('logoEn');
+  const zhW=zh.getBoundingClientRect().width;
+  en.style.letterSpacing='0px';
+  const enW=en.scrollWidth;
+  if(enW<zhW&&en.textContent.length>1){en.style.letterSpacing=((zhW-enW)/(en.textContent.length-1))+'px'}
+});
+
+/* ── Cart State ── */
+const cart={};
+
+function getCartTotal(){return Object.values(cart).reduce((s,v)=>s+v,0)}
+
+function renderCart(){
+  const total=getCartTotal();
+  document.getElementById('cartCount').textContent=total+'項';
+
+  const emptyEl=document.getElementById('cartEmpty');
+  const itemsEl=document.getElementById('cartItems');
+  const dividerEl=document.getElementById('cartDivider');
+  const summaryEl=document.getElementById('cartSummary');
+  const summaryList=document.getElementById('summaryList');
+
+  if(total===0){
+    emptyEl.style.display='block';
+    itemsEl.style.display='none';
+    dividerEl.style.display='none';
+    summaryEl.style.display='none';
+  } else {
+    emptyEl.style.display='none';
+    itemsEl.style.display='flex';
+    dividerEl.style.display='block';
+    summaryEl.style.display='block';
+
+    // render cart items
+    itemsEl.innerHTML='';
+    summaryList.innerHTML='';
+    Object.entries(cart).forEach(([id,qty])=>{
+      if(qty<=0)return;
+      const row=document.querySelector(`.service-row[data-id="${id}"]`);
+      const name=row?row.dataset.name:id;
+      // cart item
+      const div=document.createElement('div');
+      div.className='cart-item';
+      div.innerHTML=`<span class="cart-item-name">${name}</span><span class="cart-item-qty">× ${qty}</span><button class="cart-item-del" data-id="${id}">✕</button>`;
+      itemsEl.appendChild(div);
+      // summary
+      summaryList.innerHTML+=`• ${name} × ${qty}<br>`;
+    });
+
+    // delete buttons
+    itemsEl.querySelectorAll('.cart-item-del').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const id=btn.dataset.id;
+        delete cart[id];
+        updateQtyDisplay(id,0);
+        document.querySelector(`.service-row[data-id="${id}"]`).classList.remove('selected');
+        renderCart();
+        updateNextBtn();
+      });
+    });
+  }
+}
+
+function updateQtyDisplay(id,qty){
+  const el=document.getElementById('qty-'+id);
+  if(el)el.textContent=qty;
+}
+
+function updateNextBtn(){
+  const btn=document.getElementById('toDetailBtn');
+  btn.disabled=getCartTotal()===0;
+}
+
+/* ── Service row interactions ── */
+document.querySelectorAll('.service-row-add').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const id=btn.dataset.id;
+    cart[id]=(cart[id]||0)+1;
+    updateQtyDisplay(id,cart[id]);
+    document.querySelector(`.service-row[data-id="${id}"]`).classList.add('selected');
+    renderCart();
+    updateNextBtn();
+    showToast('已加入清單 ✓');
+  });
+});
+
+document.querySelectorAll('.qty-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const id=btn.dataset.id;
+    const action=btn.dataset.action;
+    if(action==='plus'){
+      cart[id]=(cart[id]||0)+1;
+    } else {
+      cart[id]=Math.max(0,(cart[id]||0)-1);
+    }
+    updateQtyDisplay(id,cart[id]);
+    if(cart[id]===0){
+      delete cart[id];
+      document.querySelector(`.service-row[data-id="${id}"]`).classList.remove('selected');
+    } else {
+      document.querySelector(`.service-row[data-id="${id}"]`).classList.add('selected');
+    }
+    renderCart();
+    updateNextBtn();
+  });
+});
+
+/* ── Radio options ── */
+document.querySelectorAll('.radio-group').forEach(group=>{
+  group.querySelectorAll('.radio-opt').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      // allow multiple for purpose, single for style
+      const isStyle=group.id==='styleGroup';
+      if(isStyle){
+        group.querySelectorAll('.radio-opt').forEach(o=>o.classList.remove('selected'));
+      }
+      opt.classList.toggle('selected');
+    });
+  });
+});
+
+/* ── Step navigation ── */
+function setStep(n){
+  document.querySelectorAll('.step-item').forEach((el,i)=>{
+    el.classList.remove('active','done');
+    if(i+1<n)el.classList.add('done');
+    if(i+1===n)el.classList.add('active');
+  });
+}
+
+document.getElementById('toDetailBtn').addEventListener('click',()=>{
+  if(getCartTotal()===0)return;
+  document.getElementById('servicePanel').style.display='none';
+  document.getElementById('detailPanel').style.display='block';
+  setStep(2);
+  window.scrollTo({top:document.getElementById('pickerPanel').offsetTop-80,behavior:'smooth'});
+});
+
+document.getElementById('backBtn').addEventListener('click',()=>{
+  document.getElementById('detailPanel').style.display='none';
+  document.getElementById('servicePanel').style.display='block';
+  setStep(1);
+});
+
+/* ── Send to LINE ── */
+document.getElementById('sendLineBtn').addEventListener('click',()=>{
+  const name=document.getElementById('f_name').value.trim();
+  const contact=document.getElementById('f_contact').value.trim();
+  const desc=document.getElementById('f_desc').value.trim();
+
+  if(!name||!contact||!desc){
+    showToast('請填寫姓名、聯絡方式與需求說明 ✕');
+    return;
+  }
+
+  // Build cart text
+  const cartLines=Object.entries(cart)
+    .filter(([,qty])=>qty>0)
+    .map(([id,qty])=>{
+      const row=document.querySelector(`.service-row[data-id="${id}"]`);
+      return `  • ${row?row.dataset.name:id} × ${qty}`;
+    }).join('\n');
+
+  // Build purposes
+  const purposes=[...document.querySelectorAll('#purposeGroup .radio-opt.selected')].map(o=>o.dataset.val).join('、')||'未填寫';
+  const styles=[...document.querySelectorAll('#styleGroup .radio-opt.selected')].map(o=>o.dataset.val).join('、')||'未填寫';
+  const date=document.getElementById('f_date').value||'未填寫';
+  const budget=document.getElementById('f_budget').value||'不確定，請報價';
+  const brand=document.getElementById('f_brand').value.trim()||'未填寫';
+  const ref=document.getElementById('f_ref').value.trim()||'無';
+
+  const msg=
+`📋 ESD 設計委託需求
+
+👤 姓名：${name}
+📞 聯絡：${contact}
+🏷️ 品牌／公司：${brand}
+
+📦 委託項目：
+${cartLines}
+
+🎯 使用用途：${purposes}
+🎨 風格偏好：${styles}
+📅 希望完成日期：${date}
+💰 預算範圍：${budget}
+
+📝 需求說明：
+${desc}
+
+🔗 參考連結：${ref}
+
+──────────────────
+請問方便報價嗎？謝謝！`;
+
+  // Open LINE
+  // ★ 替換成你自己的 LINE ID：@eds786
+  const lineUrl='https://line.me/R/oaMessage/@eds786/?'+encodeURIComponent(msg);
+  setStep(3);
+  showToast('正在開啟 LINE… 🚀');
+  setTimeout(()=>{window.open(lineUrl,'_blank')},600);
+});
+
+/* ── Toast ── */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+renderCart();
+</script>
+</body>
+</html>

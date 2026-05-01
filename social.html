@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>社群經營 | ESD 伊莉莎白設計工作室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1814;--dust:#f7f5f0;--warm:#ede8df;--gold:#c9a96e;--muted:#9a9088;--white:#fff;--ease:cubic-bezier(0.16,1,0.3,1)}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--dust);color:var(--ink);overflow-x:hidden;cursor:none}
+
+.cur{position:fixed;pointer-events:none;z-index:9999}
+.cur-dot{width:8px;height:8px;background:var(--gold);border-radius:50%;position:absolute;transform:translate(-50%,-50%)}
+.cur-ring{width:36px;height:36px;border:1.5px solid var(--ink);border-radius:50%;position:absolute;transform:translate(-50%,-50%);transition:width .4s var(--ease),height .4s,opacity .4s;opacity:.4}
+.cur.hov .cur-ring{width:56px;height:56px;opacity:.12}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 3.5rem;height:72px;display:flex;justify-content:space-between;align-items:center;background:rgba(247,245,240,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(201,169,110,.18)}
+.nav-logo{text-decoration:none;color:var(--ink);display:flex;flex-direction:column;align-items:flex-start;gap:.08rem}
+.nav-logo-zh{font-family:'Noto Serif TC',serif;font-size:.92rem;font-weight:300;letter-spacing:.13em;white-space:nowrap;display:block}
+.nav-logo-en{font-size:.58rem;text-transform:uppercase;color:var(--gold);white-space:nowrap;display:block}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{text-decoration:none;color:var(--ink);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;position:relative;padding-bottom:2px;transition:color .3s}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width .4s var(--ease)}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+
+/* Page Hero */
+.page-hero{
+  height:52vh;min-height:380px;
+  padding-top:72px;
+  background:var(--ink);
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding-left:3.5rem;padding-right:3.5rem;padding-bottom:4rem;
+}
+.page-hero::before{
+  content:'SOCIAL';
+  position:absolute;right:-1rem;top:50%;transform:translateY(-60%);
+  font-family:'Noto Serif TC',serif;font-size:18vw;font-weight:200;
+  color:rgba(255,255,255,.03);letter-spacing:.05em;pointer-events:none;white-space:nowrap;
+}
+.eyebrow{font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;opacity:0;animation:fadeUp .7s var(--ease) .2s forwards}
+.page-hero h1{font-family:'Noto Serif TC',serif;font-size:clamp(2.2rem,5vw,4.5rem);font-weight:200;color:var(--white);line-height:1.15;letter-spacing:.06em;opacity:0;animation:fadeUp .85s var(--ease) .35s forwards}
+.page-hero h1 span{color:var(--gold)}
+.page-hero-desc{font-size:.84rem;color:rgba(255,255,255,.5);line-height:1.85;max-width:500px;margin-top:1.2rem;opacity:0;animation:fadeUp .8s var(--ease) .5s forwards}
+
+/* What we do */
+.what-wrap{
+  display:grid;grid-template-columns:1fr 2fr;
+  border-bottom:1px solid rgba(201,169,110,.15);
+}
+.what-left{
+  padding:5rem 3rem 5rem 3.5rem;
+  border-right:1px solid rgba(201,169,110,.15);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.section-label{font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.9rem}
+.section-title{font-family:'Noto Serif TC',serif;font-size:clamp(1.6rem,2.8vw,2.4rem);font-weight:200;letter-spacing:.07em;line-height:1.25}
+.what-right{
+  padding:5rem 3.5rem;
+  display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;
+  background:var(--white);
+}
+.what-item{}
+.what-icon{
+  width:44px;height:44px;
+  border:1px solid rgba(201,169,110,.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;margin-bottom:1.2rem;
+}
+.what-name{font-family:'Noto Serif TC',serif;font-size:1.05rem;font-weight:300;letter-spacing:.06em;margin-bottom:.6rem}
+.what-desc{font-size:.78rem;color:var(--muted);line-height:1.9}
+
+/* Process */
+.process{padding:6rem 3.5rem;background:var(--dust)}
+.process-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3.5rem}
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid rgba(201,169,110,.2)}
+.process-step{
+  padding:2.2rem 2rem;
+  border-right:1px solid rgba(201,169,110,.2);
+  position:relative;
+  transition:background .3s;
+}
+.process-step:last-child{border-right:none}
+.process-step:hover{background:var(--white)}
+.process-step-num{
+  font-family:'Noto Serif TC',serif;
+  font-size:2.8rem;font-weight:200;color:rgba(201,169,110,.25);
+  line-height:1;margin-bottom:1rem;
+}
+.process-step-name{font-family:'Noto Serif TC',serif;font-size:1rem;font-weight:300;letter-spacing:.08em;margin-bottom:.7rem}
+.process-step-desc{font-size:.76rem;color:var(--muted);line-height:1.85}
+
+/* Gallery — 作品卡片 */
+.gallery-section{padding:5rem 3.5rem 6rem;background:var(--white)}
+.gallery-section .section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:.8rem}
+.gallery-desc{font-size:.82rem;color:var(--muted);line-height:1.85;margin-bottom:2.5rem;max-width:560px}
+
+/* 頂部精選：1大 + 2小 */
+.gallery-featured{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1rem;margin-bottom:1rem;
+}
+.gf-main{position:relative;overflow:hidden;cursor:none;background:var(--warm)}
+.gf-main img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .65s var(--ease);aspect-ratio:4/3}
+.gf-main:hover img{transform:scale(1.04)}
+.gf-side{display:grid;grid-template-rows:1fr 1fr;gap:1rem}
+.gf-small{position:relative;overflow:hidden;cursor:none;background:var(--warm)}
+.gf-small img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .65s var(--ease);aspect-ratio:4/3}
+.gf-small:hover img{transform:scale(1.04)}
+
+/* 共用 overlay */
+.work-ov{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(26,24,20,.82) 0%,transparent 55%);
+  opacity:0;transition:opacity .35s;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:1.5rem;
+}
+.gf-main:hover .work-ov,
+.gf-small:hover .work-ov,
+.wc-img:hover .work-ov{opacity:1}
+.work-ov-cat{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:.3rem}
+.work-ov-title{font-family:'Noto Serif TC',serif;font-size:1rem;font-weight:200;color:var(--white)}
+.work-ov-client{font-size:.7rem;color:rgba(255,255,255,.6);margin-top:.2rem}
+
+/* 作品卡片列 */
+.work-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem}
+.work-card{cursor:none;transition:transform .35s var(--ease)}
+.work-card:hover{transform:translateY(-3px)}
+.wc-img{position:relative;overflow:hidden;background:var(--warm);aspect-ratio:1/1}
+.wc-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .65s var(--ease)}
+.work-card:hover .wc-img img{transform:scale(1.06)}
+.wc-body{padding:.9rem 0 0}
+.wc-tag{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.28rem}
+.wc-title{font-family:'Noto Serif TC',serif;font-size:.95rem;font-weight:300;letter-spacing:.05em;margin-bottom:.4rem}
+.wc-desc{font-size:.74rem;color:var(--muted);line-height:1.8}
+
+/* 底部橫幅大圖 */
+.work-banner{
+  position:relative;overflow:hidden;cursor:none;
+  height:280px;margin-bottom:2.5rem;background:var(--warm);
+}
+.work-banner img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .65s var(--ease)}
+.work-banner:hover img{transform:scale(1.03)}
+.wb-content{
+  position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(26,24,20,.75) 0%,transparent 55%);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:3rem 3.5rem;
+}
+.wb-cat{font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem}
+.wb-title{font-family:'Noto Serif TC',serif;font-size:1.8rem;font-weight:200;color:var(--white);letter-spacing:.06em;margin-bottom:.6rem}
+.wb-desc{font-size:.78rem;color:rgba(255,255,255,.65);line-height:1.8;max-width:360px}
+
+/* Platforms */
+.platforms{
+  background:var(--warm);
+  padding:5rem 3.5rem;
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;
+}
+.platform-card{
+  background:var(--white);
+  padding:2.5rem 2rem;
+  border-bottom:3px solid transparent;
+  transition:border-color .3s,transform .35s var(--ease);
+  cursor:none;
+}
+.platform-card:hover{border-color:var(--gold);transform:translateY(-4px)}
+.platform-icon{font-size:1.8rem;margin-bottom:1.2rem}
+.platform-name{font-family:'Noto Serif TC',serif;font-size:1.1rem;font-weight:300;letter-spacing:.06em;margin-bottom:.6rem}
+.platform-desc{font-size:.78rem;color:var(--muted);line-height:1.85;margin-bottom:1.2rem}
+.platform-tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.platform-tag{font-size:.62rem;letter-spacing:.1em;padding:.25rem .7rem;border:1px solid #ddd;color:var(--muted)}
+
+/* CTA */
+.cta-bar{
+  background:var(--ink);
+  padding:5rem 3.5rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.cta-title{font-family:'Noto Serif TC',serif;font-size:clamp(1.6rem,3vw,2.8rem);font-weight:200;color:var(--white);letter-spacing:.06em;line-height:1.3}
+.cta-title span{color:var(--gold)}
+.btn{display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;padding:.88rem 2rem;transition:all .35s var(--ease);cursor:none;white-space:nowrap}
+.btn-gold{background:var(--gold);color:var(--white)}
+.btn-gold:hover{background:var(--white);color:var(--ink)}
+.btn-outline-w{border:1.5px solid rgba(255,255,255,.3);color:var(--white)}
+.btn-outline-w:hover{border-color:var(--gold);color:var(--gold)}
+.cta-btns{display:flex;gap:1rem}
+
+footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.05);padding:2rem 3.5rem;display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:.68rem;color:rgba(255,255,255,.3);letter-spacing:.08em}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:.68rem;color:rgba(255,255,255,.4);text-decoration:none;letter-spacing:.1em;transition:color .3s}
+.footer-links a:hover{color:var(--gold)}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .75s var(--ease),transform .75s var(--ease)}
+.reveal.in{opacity:1;transform:translateY(0)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:960px){
+  nav{padding:0 2rem}
+  .page-hero{padding:8rem 2rem 3.5rem}
+  .what-wrap{grid-template-columns:1fr}
+  .what-left{border-right:none;border-bottom:1px solid rgba(201,169,110,.15);padding:3rem 2rem}
+  .what-right{grid-template-columns:1fr;padding:3rem 2rem}
+  .process{padding:4rem 2rem}
+  .process-grid{grid-template-columns:1fr 1fr}
+  .process-step{border-right:none;border-bottom:1px solid rgba(201,169,110,.2)}
+  .process-step:nth-child(odd){border-right:1px solid rgba(201,169,110,.2)}
+  .gallery-section{padding:4rem 2rem 5rem}
+  .gallery-featured{grid-template-columns:1fr}
+  .gf-side{grid-template-rows:auto;grid-template-columns:1fr 1fr}
+  .work-cards{grid-template-columns:1fr}
+  .wb-content{padding:2rem}
+  .platforms{grid-template-columns:1fr;padding:3rem 2rem}
+  .cta-bar{flex-direction:column;gap:2.5rem;text-align:center;padding:4rem 2rem}
+  .cta-btns{flex-direction:column;width:100%}
+  footer{flex-direction:column;gap:1rem;padding:1.5rem 2rem;text-align:center}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  .gf-side{grid-template-columns:1fr}
+  .process-grid{grid-template-columns:1fr}
+  .process-step:nth-child(odd){border-right:none}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="cur"><div class="cur-ring" id="curRing"></div><div class="cur-dot" id="curDot"></div></div>
+
+<nav>
+  <a href="index.html" class="nav-logo" id="navLogo">
+    <span class="nav-logo-zh" id="logoZh">伊莉莎白設計工作室</span>
+    <span class="nav-logo-en" id="logoEn">Elizabeth Design Studio</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">關於</a></li>
+    <li><a href="portfolio.html">設計作品集</a></li>
+    <li><a href="social.html" class="active">社群經營</a></li>
+    <li><a href="order.html">委託下單</a></li>
+    <li><a href="contact.html">與我聯絡</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<div class="page-hero">
+  <p class="eyebrow">Social Media Management</p>
+  <h1>讓品牌在<span>社群</span>上<br>被看見、被記住</h1>
+  <p class="page-hero-desc">專業的社群視覺設計，讓每一則貼文都成為品牌最好的名片。從策略規劃到視覺執行，協助您打造一致且有溫度的社群形象。</p>
+</div>
+
+<!-- What we do -->
+<div class="what-wrap">
+  <div class="what-left reveal">
+    <p class="section-label">Services</p>
+    <h2 class="section-title">社群經營<br>服務項目</h2>
+  </div>
+  <div class="what-right">
+    <div class="what-item reveal">
+      <div class="what-icon">📱</div>
+      <h3 class="what-name">貼文圖設計</h3>
+      <p class="what-desc">Instagram、Facebook 靜態貼文設計，依品牌調性規劃視覺風格，讓每則貼文都有一致的品牌感。</p>
+    </div>
+    <div class="what-item reveal">
+      <div class="what-icon">✨</div>
+      <h3 class="what-name">限時動態設計</h3>
+      <p class="what-desc">Stories 專屬尺寸設計，互動感強、版面活潑，有效提升觸及率與用戶互動。</p>
+    </div>
+    <div class="what-item reveal">
+      <div class="what-icon">🎨</div>
+      <h3 class="what-name">視覺風格規劃</h3>
+      <p class="what-desc">協助品牌建立專屬的色彩、字型與排版系統，讓社群頁面整體美觀、風格統一。</p>
+    </div>
+    <div class="what-item reveal">
+      <div class="what-icon">📊</div>
+      <h3 class="what-name">社群素材包</h3>
+      <p class="what-desc">一次性交付多張配套素材，包含固定模板、節慶版型、促銷版型等，方便自行替換文字使用。</p>
+    </div>
+  </div>
+</div>
+
+<!-- Process -->
+<section class="process">
+  <div class="process-head reveal">
+    <div>
+      <p class="section-label">How We Work</p>
+      <h2 class="section-title">合作流程</h2>
+    </div>
+  </div>
+  <div class="process-grid reveal">
+    <div class="process-step">
+      <div class="process-step-num">01</div>
+      <h3 class="process-step-name">需求溝通</h3>
+      <p class="process-step-desc">透過 LINE 或表單了解您的品牌背景、目標受眾與設計偏好，確認合作方向。</p>
+    </div>
+    <div class="process-step">
+      <div class="process-step-num">02</div>
+      <h3 class="process-step-name">風格提案</h3>
+      <p class="process-step-desc">根據需求提供視覺風格方向，包含色彩、字型與排版草稿，確認整體風格後進行製作。</p>
+    </div>
+    <div class="process-step">
+      <div class="process-step-num">03</div>
+      <h3 class="process-step-name">設計製作</h3>
+      <p class="process-step-desc">依確認的風格進行完整設計，過程中提供進度更新，確保成品符合期待。</p>
+    </div>
+    <div class="process-step">
+      <div class="process-step-num">04</div>
+      <h3 class="process-step-name">交付完稿</h3>
+      <p class="process-step-desc">提供適合各平台尺寸的高解析度檔案，並附上簡易使用說明，方便後續自行管理。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Gallery -->
+<section class="gallery-section">
+  <div class="section-head reveal">
+    <div>
+      <p class="section-label">Portfolio</p>
+      <h2 class="section-title">社群作品精選</h2>
+    </div>
+    <a href="portfolio.html?cat=social" style="font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid #ddd;padding-bottom:2px">查看全部 →</a>
+  </div>
+  <p class="gallery-desc reveal">每一個品牌都有獨特的故事，我們用視覺語言幫你說出來。以下精選部分合作案例，展示不同產業、不同風格的社群設計成果。</p>
+
+  <!-- 頂部精選：1大 + 2小 -->
+  <div class="gallery-featured reveal">
+    <div class="gf-main">
+      <img src="https://static.wixstatic.com/media/41ce05_c71574ff69be4d159ee963cf0ec80db9~mv2.jpg" alt="品牌形象系列"/>
+      <div class="work-ov">
+        <div class="work-ov-cat">Instagram 貼文系列</div>
+        <div class="work-ov-title">品牌形象視覺系列</div>
+        <div class="work-ov-client">餐飲品牌 × 8 張貼文套組</div>
+      </div>
+    </div>
+    <div class="gf-side">
+      <div class="gf-small">
+        <img src="https://static.wixstatic.com/media/41ce05_558a3d1412194867ad626b7151dfe293~mv2.jpg" alt="節慶限動"/>
+        <div class="work-ov">
+          <div class="work-ov-cat">限時動態設計</div>
+          <div class="work-ov-title">節慶限時動態組合</div>
+          <div class="work-ov-client">美妝品牌 × 節慶促銷</div>
+        </div>
+      </div>
+      <div class="gf-small">
+        <img src="https://static.wixstatic.com/media/41ce05_b7648cfa815c484cbf2646cbea6d5522~mv2.jpg" alt="活動宣傳"/>
+        <div class="work-ov">
+          <div class="work-ov-cat">活動宣傳貼文</div>
+          <div class="work-ov-title">開幕活動系列視覺</div>
+          <div class="work-ov-client">咖啡廳 × 開幕宣傳</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 作品卡片列 -->
+  <div class="work-cards reveal">
+    <div class="work-card">
+      <div class="wc-img">
+        <img src="https://static.wixstatic.com/media/41ce05_227d36aeddaf4310b035a791550fdacf~mv2.jpg" alt="" loading="lazy"/>
+        <div class="work-ov">
+          <div class="work-ov-cat">社群圖片</div>
+          <div class="work-ov-title">品牌日常貼文</div>
+        </div>
+      </div>
+      <div class="wc-body">
+        <p class="wc-tag">Instagram · 貼文設計</p>
+        <h3 class="wc-title">品牌日常內容視覺</h3>
+        <p class="wc-desc">為服飾品牌打造一致的 IG 貼文風格，統一色調與排版，讓每則貼文都符合品牌氣質，提升粉絲對品牌的認同感。</p>
+      </div>
+    </div>
+    <div class="work-card">
+      <div class="wc-img">
+        <img src="https://static.wixstatic.com/media/8109e1_012e55b7f8fe44429f4a991e10a84cdf~mv2.jpg" alt="" loading="lazy"/>
+        <div class="work-ov">
+          <div class="work-ov-cat">社群圖片</div>
+          <div class="work-ov-title">促銷活動視覺</div>
+        </div>
+      </div>
+      <div class="wc-body">
+        <p class="wc-tag">Facebook · 活動宣傳</p>
+        <h3 class="wc-title">週年慶促銷視覺設計</h3>
+        <p class="wc-desc">針對電商品牌週年慶設計系列促銷素材，包含主視覺、倒數貼文與結果公告，讓整個活動期視覺統一且有張力。</p>
+      </div>
+    </div>
+    <div class="work-card">
+      <div class="wc-img">
+        <img src="https://static.wixstatic.com/media/8109e1_6874794245374b90add10c0570861d63~mv2.png" alt="" loading="lazy"/>
+        <div class="work-ov">
+          <div class="work-ov-cat">社群圖片</div>
+          <div class="work-ov-title">新品上市貼文</div>
+        </div>
+      </div>
+      <div class="wc-body">
+        <p class="wc-tag">Instagram · 新品發佈</p>
+        <h3 class="wc-title">新品上市系列貼文</h3>
+        <p class="wc-desc">為保養品牌規劃新品上市視覺策略，從預告、上市到開箱共 12 張貼文，以乾淨清爽的視覺語言強化產品質感。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第二排卡片 -->
+  <div class="work-cards reveal">
+    <div class="work-card">
+      <div class="wc-img">
+        <img src="https://static.wixstatic.com/media/8109e1_2ce59f3cdf69414d865c3781f8fd1046~mv2.jpg" alt="" loading="lazy"/>
+        <div class="work-ov">
+          <div class="work-ov-cat">社群圖片</div>
+          <div class="work-ov-title">課程招生視覺</div>
+        </div>
+      </div>
+      <div class="wc-body">
+        <p class="wc-tag">Instagram · 教育品牌</p>
+        <h3 class="wc-title">課程招生系列設計</h3>
+        <p class="wc-desc">為線上課程品牌設計招生期間的 IG 系列貼文，融入品牌色彩與字型系統，讓資訊傳遞清晰同時保有品牌溫度。</p>
+      </div>
+    </div>
+    <div class="work-card">
+      <div class="wc-img">
+        <img src="https://static.wixstatic.com/media/8109e1_0f8b53b7d8ff438fb7c453f727467e84~mv2.jpg" alt="" loading="lazy"/>
+        <div class="work-ov">
+          <div class="work-ov-cat">社群圖片</div>
+          <div class="work-ov-title">節慶氛圍貼文</div>
+        </div>
+      </div>
+      <div class="wc-body">
+        <p class="wc-tag">Facebook · 節慶專案</p>
+        <h3 class="wc-title">節日氛圍系列視覺</h3>
+        <p class="wc-desc">配合中秋、農曆新年、母親節等重要節日設計限定貼文，融入節日元素同時維持品牌調性，讓節慶感與品牌感並存。</p>
+      </div>
+    </div>
+    <div class="work-card">
+      <div class="wc-img">
+        <img src="https://static.wixstatic.com/media/8109e1_5db962375a4b495bbe7d203b0794fe00~mv2.png" alt="" loading="lazy"/>
+        <div class="work-ov">
+          <div class="work-ov-cat">廣告素材</div>
+          <div class="work-ov-title">電商廣告橫幅</div>
+        </div>
+      </div>
+      <div class="wc-body">
+        <p class="wc-tag">電商平台 · Banner 設計</p>
+        <h3 class="wc-title">電商廣告橫幅設計</h3>
+        <p class="wc-desc">為電商品牌設計不同尺寸的廣告橫幅，針對 PC 與行動版本個別優化版面，提升廣告點擊率與視覺吸引力。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部橫幅大圖 -->
+  <div class="work-banner reveal">
+    <img src="https://static.wixstatic.com/media/8109e1_4ee2aa64d29e4736bb7f7d68e0863f81~mv2.png" alt="社群全案規劃" loading="lazy"/>
+    <div class="wb-content">
+      <p class="wb-cat">社群視覺全案規劃</p>
+      <h3 class="wb-title">從 0 到 1 建立<br>品牌社群形象</h3>
+      <p class="wb-desc">不只是單張設計，更提供完整的社群視覺策略。協助品牌建立色彩系統、版型模板，讓你的社群頁面從第一眼就抓住人心。</p>
+    </div>
+  </div>
+
+  <div style="text-align:center">
+    <a href="portfolio.html?cat=social" style="display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;padding:.88rem 2rem;border:1.5px solid var(--ink);color:var(--ink);transition:all .35s;cursor:none" onmouseenter="this.style.background='#1a1814';this.style.color='#fff'" onmouseleave="this.style.background='transparent';this.style.color='#1a1814'">查看更多社群作品 →</a>
+  </div>
+</section>
+
+<!-- Platforms -->
+<div class="platforms">
+  <div class="platform-card reveal">
+    <div class="platform-icon">📸</div>
+    <h3 class="platform-name">Instagram</h3>
+    <p class="platform-desc">專注於視覺美學，打造吸睛的貼文與限時動態，提升品牌在 IG 上的辨識度與粉絲黏著度。</p>
+    <div class="platform-tags">
+      <span class="platform-tag">貼文設計</span>
+      <span class="platform-tag">限時動態</span>
+      <span class="platform-tag">Reels 封面</span>
+      <span class="platform-tag">個人檔案</span>
+    </div>
+  </div>
+  <div class="platform-card reveal">
+    <div class="platform-icon">👍</div>
+    <h3 class="platform-name">Facebook</h3>
+    <p class="platform-desc">設計適合 FB 受眾的圖文內容，包含活動封面、貼文配圖與廣告素材，強化粉專的整體視覺品質。</p>
+    <div class="platform-tags">
+      <span class="platform-tag">粉專封面</span>
+      <span class="platform-tag">貼文配圖</span>
+      <span class="platform-tag">活動橫幅</span>
+      <span class="platform-tag">廣告素材</span>
+    </div>
+  </div>
+  <div class="platform-card reveal">
+    <div class="platform-icon">🛍️</div>
+    <h3 class="platform-name">電商平台</h3>
+    <p class="platform-desc">針對蝦皮、Pinkoi、MOMO 等電商設計商品主圖、Banner 與活動頁面，提升轉換率與品牌印象。</p>
+    <div class="platform-tags">
+      <span class="platform-tag">商品主圖</span>
+      <span class="platform-tag">活動 Banner</span>
+      <span class="platform-tag">說明頁設計</span>
+      <span class="platform-tag">促銷素材</span>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-bar">
+  <h2 class="cta-title reveal">想讓社群視覺<br>升級嗎？<span>立即委託</span>。</h2>
+  <div class="cta-btns reveal">
+    <a href="order.html" class="btn btn-gold">線上委託下單</a>
+    <a href="https://lin.ee/ocDYK0A" target="_blank" class="btn btn-outline-w">LINE 直接詢問</a>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-copy">© 2026 Elizabeth Design Studio 伊莉莎白設計工作室</span>
+  <div class="footer-links">
+    <a href="https://instagram.com/elizabeth.design.tw" target="_blank">Instagram</a>
+    <a href="https://lin.ee/ocDYK0A" target="_blank">LINE</a>
+    <a href="mailto:edsmichelle786@gmail.com">Email</a>
+  </div>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});
+(function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.ig-item,.platform-card').forEach(el=>{el.addEventListener('mouseenter',()=>cur.classList.add('hov'));el.addEventListener('mouseleave',()=>cur.classList.remove('hov'))});
+window.addEventListener('load',()=>{
+  const zh=document.getElementById('logoZh'),en=document.getElementById('logoEn');
+  const zhW=zh.getBoundingClientRect().width;
+  en.style.letterSpacing='0px';
+  const enW=en.scrollWidth;
+  if(enW<zhW&&en.textContent.length>1){en.style.letterSpacing=((zhW-enW)/(en.textContent.length-1))+'px'}
+});
+const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),i*80);obs.unobserve(e.target)}});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
