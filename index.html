@@ -11,12 +11,10 @@
   position:relative;height:100vh;min-height:620px;
   overflow:hidden;display:flex;align-items:flex-end;
 }
-/* 輪播作為背景 */
 .hero-slides{position:absolute;inset:0;z-index:0}
 .slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s var(--ease)}
 .slide.active{opacity:1}
 .slide img{width:100%;height:100%;object-fit:cover;display:block}
-/* 漸層遮罩：左下金白漸層 */
 .hero-overlay{
   position:absolute;inset:0;z-index:1;
   background:linear-gradient(
@@ -27,7 +25,6 @@
     transparent 100%
   );
 }
-/* 文字區塊 */
 .hero-content{
   position:relative;z-index:2;
   padding:0 3rem 5rem;
@@ -42,14 +39,15 @@
 .hero-eyebrow::before,.hero-eyebrow::after{
   content:'';flex:1;max-width:40px;height:1px;background:var(--gold-line);
 }
+/* 圖三：主標題改黑體 */
 .hero-title{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(3.2rem,5.5vw,6rem);
-  font-weight:300;line-height:1.05;letter-spacing:.01em;
+  font-family:'Noto Sans TC',sans-serif;
+  font-size:clamp(2.8rem,5.5vw,6rem);
+  font-weight:300;line-height:1.15;letter-spacing:.01em;
   color:var(--ink);margin-bottom:1.6rem;
   opacity:0;animation:fadeUp .9s var(--ease) .35s forwards;
 }
-.hero-title em{font-style:italic;color:var(--gold)}
+.hero-title em{font-style:italic;color:var(--gold);font-family:'Cormorant Garamond',serif}
 .hero-desc{
   font-size:.82rem;line-height:2;
   color:#5a5040;
@@ -60,7 +58,6 @@
   display:flex;gap:.8rem;
   opacity:0;animation:fadeUp .8s var(--ease) .65s forwards;
 }
-/* 右下角輪播控制 */
 .hero-controls{
   position:absolute;bottom:2.5rem;right:2.8rem;z-index:3;
   display:flex;flex-direction:column;align-items:flex-end;gap:.9rem;
@@ -90,19 +87,19 @@
 .svc-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;margin-bottom:1.4rem;filter:grayscale(15%);transition:filter .4s}
 .svc-card:hover .svc-img{filter:grayscale(0%)}
 .svc-tag{font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.45rem;display:block}
-.svc-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:300;letter-spacing:.04em;margin-bottom:.6rem;line-height:1.3}
-.svc-desc{font-size:.72rem;color:var(--muted);line-height:1.85}
+.svc-name{font-family:'Noto Sans TC',sans-serif;font-size:1rem;font-weight:400;letter-spacing:.04em;margin-bottom:.6rem;line-height:1.4}
+.svc-desc{font-size:.74rem;color:var(--muted);line-height:1.85}
 
-/* ══ 跑馬燈 ══ */
-.marquee-sec{background:var(--white);overflow:hidden;border-top:1px solid var(--gold-line);border-bottom:1px solid var(--gold-line)}
+/* 圖四：跑馬燈改回黑底 */
+.marquee-sec{background:var(--ink);overflow:hidden;border-top:none;border-bottom:none}
 .marquee-track{display:flex;animation:marquee 32s linear infinite;white-space:nowrap}
 .marquee-track:hover{animation-play-state:paused}
-.mq-item{display:inline-flex;align-items:center;gap:1rem;padding:1.2rem 2.2rem;border-right:1px solid var(--gold-line);text-decoration:none;flex-shrink:0;transition:background .25s}
-.mq-item:hover{background:var(--gold-bg)}
+.mq-item{display:inline-flex;align-items:center;gap:1rem;padding:1.2rem 2.2rem;border-right:1px solid rgba(255,255,255,.08);text-decoration:none;flex-shrink:0;transition:background .25s}
+.mq-item:hover{background:rgba(196,153,58,.15)}
 .mq-num{font-size:.52rem;color:var(--gold);letter-spacing:.2em;font-weight:400}
-.mq-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:300;letter-spacing:.1em;color:var(--ink);transition:color .25s}
+.mq-name{font-family:'Noto Sans TC',sans-serif;font-size:.9rem;font-weight:300;letter-spacing:.06em;color:rgba(255,255,255,.7);transition:color .25s}
 .mq-item:hover .mq-name{color:var(--gold)}
-.mq-arr{font-size:.6rem;color:var(--gold-line);transition:transform .25s,color .25s}
+.mq-arr{font-size:.6rem;color:rgba(255,255,255,.2);transition:transform .25s,color .25s}
 .mq-item:hover .mq-arr{transform:translateX(4px);color:var(--gold)}
 
 /* ══ About ══ */
@@ -110,12 +107,13 @@
 .about-txt{padding:6rem 4rem 6rem 3rem;display:flex;flex-direction:column;justify-content:center;gap:1.2rem;background:var(--cream)}
 .about-p{font-size:.82rem;line-height:2;color:#6a6050;max-width:420px}
 .about-note{font-size:.7rem;color:var(--muted);border-left:2px solid var(--gold);padding-left:1rem;line-height:1.85;margin-top:.4rem}
-.about-vis{position:relative;overflow:hidden;background:var(--ink)}
-.about-vis img{width:100%;height:100%;object-fit:cover;display:block;opacity:.5;mix-blend-mode:luminosity}
-.about-vis::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(196,153,58,.25) 0%,transparent 60%)}
+/* 圖五：白色濾鏡 */
+.about-vis{position:relative;overflow:hidden;background:var(--white)}
+.about-vis img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85;mix-blend-mode:multiply;filter:grayscale(30%)}
+.about-vis::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.15)}
 .about-num{position:absolute;bottom:2.5rem;left:2.5rem}
-.about-num-val{font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;color:var(--gold);line-height:1}
-.about-num-lab{font-size:.56rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:.3rem}
+.about-num-val{font-family:'Noto Sans TC',sans-serif;font-size:5rem;font-weight:200;color:var(--gold);line-height:1}
+.about-num-lab{font-size:.56rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(30,25,15,.45);margin-top:.3rem}
 
 /* RWD */
 @media(max-width:1024px){.services-grid{grid-template-columns:1fr 1fr}.svc-card:nth-child(2){border-right:none}.svc-card:nth-child(3){border-right:1px solid var(--gold-line);border-top:1px solid var(--gold-line)}.svc-card:nth-child(4){border-right:none;border-top:1px solid var(--gold-line)}}
