@@ -75,7 +75,7 @@ nav.scrolled {
 .nav-logo {
   text-decoration: none;
   display: inline-flex; flex-direction: column;
-  align-items: stretch; gap: .14rem;
+  align-items: flex-start; gap: .14rem;
 }
 .nav-logo-zh {
   font-family: 'Noto Sans TC', sans-serif;
@@ -87,10 +87,7 @@ nav.scrolled {
   font-size: .5rem; letter-spacing: .08em;
   text-transform: uppercase; color: var(--gold);
   white-space: nowrap; display: block;
-  /* 撐滿父層寬度 = 與中文同寬 */
-  text-align: justify;
-  text-align-last: justify;
-  width: 100%;
+  /* 寬度由 JS 動態計算 letter-spacing 使其與中文同寬 */
 }
 
 /* ── Links ── */
