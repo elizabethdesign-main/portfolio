@@ -632,26 +632,25 @@ ${desc}
 請問方便報價嗎？謝謝！`;
 
   setStep(3);
-  // 偵測裝置，手機用 line:// 深層連結直接開 app，桌機用 line.me
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  const lineId = '@eds786';
   const encoded = encodeURIComponent(msg);
-  let lineUrl;
+  const lineId = '%40eds786'; // @ encode 成 %40
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
   if(isMobile){
-    // 手機：直接跳轉 LINE app 並帶入訊息
-    lineUrl = 'https://line.me/R/oaMessage/' + lineId.replace('@','') + '/?' + encoded;
+    // 手機：line:// 深層連結直接開 app
+    window.location.href = 'line://oaMessage/' + lineId + '/?' + encoded;
   } else {
-    // 桌機：開啟 LINE OA 官方帳號頁面
-    lineUrl = 'https://line.me/ti/p/' + lineId;
-    // 同時複製訊息到剪貼簿，方便貼上
+    // 桌機：https 版本
+    const lineUrl = 'https://line.me/R/oaMessage/' + lineId + '/?' + encoded;
+    // 同時複製訊息到剪貼簿
     try{
       await navigator.clipboard.writeText(msg);
       showToast('訊息已複製！開啟 LINE 後直接貼上送出 📋');
     } catch(e){
-      showToast('請開啟 LINE 並貼上訊息');
+      showToast('正在開啟 LINE…');
     }
+    setTimeout(()=>window.open(lineUrl,'_blank'),400);
   }
-  setTimeout(()=>window.open(lineUrl,'_blank'),800);
 });
 
 /* Toast */
