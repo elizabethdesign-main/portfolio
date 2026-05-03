@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>與我聯絡 | ESD 伊莉莎白設計工作室</title>
 <link rel="stylesheet" href="shared.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - var(--nav-h) - 46vh)}
 .contact-channels{padding:5rem 3rem;border-right:1px solid var(--line);background:var(--dust)}
@@ -81,7 +82,7 @@
 </div>
 <footer class="site-footer">
   <div class="footer-top">
-    <div class="footer-brand"><div class="footer-brand-logo">伊莉莎白設計工作室</div><span class="footer-brand-en">Elizabeth Design Studio</span><div class="footer-brand-desc">以設計為筆，呈現生活的美學與詩意。專注平面視覺設計的私人工作室。</div></div>
+    <div class="footer-brand"><div class="footer-brand-logo" id="footerZh">伊莉莎白設計工作室</div><span class="footer-brand-en" id="footerEn">Elizabeth Design Studio</span><div class="footer-brand-desc">以設計為筆，呈現生活的美學與詩意。專注平面視覺設計的私人工作室。</div></div>
     <div class="footer-col"><div class="footer-col-title">頁面</div><ul><li><a href="index.html">關於工作室</a></li><li><a href="portfolio.html">設計作品集</a></li><li><a href="social.html">社群經營</a></li><li><a href="order.html">委託下單</a></li><li><a href="contact.html">與我聯絡</a></li></ul></div>
     <div class="footer-col"><div class="footer-col-title">聯絡</div><ul><li><a href="https://lin.ee/ocDYK0A" target="_blank">LINE @eds786</a></li><li><a href="https://instagram.com/elizabeth.design.tw" target="_blank">Instagram</a></li><li><a href="mailto:edsmichelle786@gmail.com">Email</a></li></ul></div>
   </div>
@@ -93,7 +94,7 @@ let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});
 (function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
 document.querySelectorAll('a,button,.channel-card').forEach(el=>{el.addEventListener('mouseenter',()=>cur.classList.add('hov'));el.addEventListener('mouseleave',()=>cur.classList.remove('hov'))});
-window.addEventListener('load',()=>{const zh=document.getElementById('logoZh'),en=document.getElementById('logoEn');const zhW=zh.getBoundingClientRect().width;en.style.letterSpacing='0px';const enW=en.scrollWidth;if(enW<zhW&&en.textContent.length>1)en.style.letterSpacing=((zhW-enW)/(en.textContent.length-1))+'px'});
+window.addEventListener('load',()=>{const zh=document.getElementById('logoZh'),en=document.getElementById('logoEn');const zhW=zh.getBoundingClientRect().width;en.style.letterSpacing='0px';const enTxt=en.textContent.trim();const enW=en.scrollWidth;if(zhW>enW&&enTxt.length>1){const extra=(zhW-enW)/(enTxt.length-1);en.style.letterSpacing=extra+'px'}const fZh=document.getElementById('footerZh'),fEn=document.getElementById('footerEn');if(fZh&&fEn){fEn.style.letterSpacing='0px';const fZhW=fZh.getBoundingClientRect().width;const fEnTxt=fEn.textContent.trim();const fEnW=fEn.scrollWidth;if(fZhW>fEnW&&fEnTxt.length>1){fEn.style.letterSpacing=((fZhW-fEnW)/(fEnTxt.length-1))+'px'}}});
 const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),i*100);obs.unobserve(e.target)}});},{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 </script>
