@@ -585,7 +585,7 @@ document.getElementById('backBtn').addEventListener('click',()=>{
 });
 
 /* Send to LINE */
-document.getElementById('sendLineBtn').addEventListener('click',()=>{
+document.getElementById('sendLineBtn').addEventListener('click', async ()=>{
   const name=document.getElementById('f_name').value.trim();
   const contact=document.getElementById('f_contact').value.trim();
   const brand=document.getElementById('f_brand').value.trim();
@@ -632,8 +632,26 @@ ${desc}
 請問方便報價嗎？謝謝！`;
 
   setStep(3);
-  showToast('正在開啟 LINE… 🚀');
-  setTimeout(()=>window.open('https://line.me/R/oaMessage/@eds786/?'+encodeURIComponent(msg),'_blank'),600);
+  // 偵測裝置，手機用 line:// 深層連結直接開 app，桌機用 line.me
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const lineId = '@eds786';
+  const encoded = encodeURIComponent(msg);
+  let lineUrl;
+  if(isMobile){
+    // 手機：直接跳轉 LINE app 並帶入訊息
+    lineUrl = 'https://line.me/R/oaMessage/' + lineId.replace('@','') + '/?' + encoded;
+  } else {
+    // 桌機：開啟 LINE OA 官方帳號頁面
+    lineUrl = 'https://line.me/ti/p/' + lineId;
+    // 同時複製訊息到剪貼簿，方便貼上
+    try{
+      await navigator.clipboard.writeText(msg);
+      showToast('訊息已複製！開啟 LINE 後直接貼上送出 📋');
+    } catch(e){
+      showToast('請開啟 LINE 並貼上訊息');
+    }
+  }
+  setTimeout(()=>window.open(lineUrl,'_blank'),800);
 });
 
 /* Toast */
