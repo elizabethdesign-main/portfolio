@@ -151,8 +151,9 @@ nav.scrolled {
 }
 .footer-brand-en {
   font-size: .5rem; text-transform: uppercase;
-  color: var(--gold); margin-bottom: 1.2rem; display: block;
+  color: var(--gold); /* margin-bottom: 1.2rem; */ display: block;
   /* 寬度由 JS 動態計算 letter-spacing 使其與中文同寬 */
+
 }
 .footer-brand-desc {
   font-size: .74rem; color: rgba(255,255,255,.38);
