@@ -102,7 +102,17 @@
     <li><a href="order.html" class="nav-order">委託下單</a></li>
     <li><a href="contact.html">與我聯絡</a></li>
   </ul>
+  <button class="nav-hamburger" id="navHamburger" aria-label="選單"><span></span><span></span><span></span></button>
 </nav>
+<div class="mobile-menu" id="mobileMenu">
+  <ul class="mobile-nav-links">
+    <li><a href="index.html">關於</a></li>
+    <li><a href="portfolio.html">設計作品集</a></li>
+    <li><a href="social.html" class="active">社群經營</a></li>
+    <li><a href="order.html">委託下單</a></li>
+    <li><a href="contact.html">與我聯絡</a></li>
+  </ul>
+</div>
 
 <div class="page-hero">
   <div class="page-hero-watermark">SOCIAL</div>
@@ -241,6 +251,15 @@
   </div>
 </div>
 
+<!-- 浮動按鈕 -->
+<div class="float-btns">
+  <a href="https://lin.ee/ocDYK0A" target="_blank" class="float-btn float-line" aria-label="LINE">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 5.582 2 10c0 2.759 1.5 5.195 3.828 6.777-.1.666-.432 2.22-.498 2.556 0 0-.018.107.062.149.08.042.164.017.164.017.91-.256 5.88-3.384 7.26-4.275.87.127 1.768.193 2.684.193 5.523 0 10-3.582 10-8S17.523 2 12 2z"/></svg>
+  </a>
+  <button class="float-btn float-top" id="floatTop" aria-label="回到頂部">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 15V5M10 5L5 10M10 5L15 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
 <footer class="site-footer">
   <div class="footer-top">
     <div class="footer-brand"><div class="footer-brand-logo" id="footerZh">伊莉莎白設計工作室</div><span class="footer-brand-en" id="footerEn">Elizabeth Design Studio</span><div class="footer-brand-desc">以設計為筆，呈現生活的美學與詩意。專注平面視覺設計的私人工作室。</div></div>
@@ -255,7 +274,16 @@ let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});
 (function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
 document.querySelectorAll('a,button,.svc-tab,.wk,.plat').forEach(el=>{el.addEventListener('mouseenter',()=>cur.classList.add('hov'));el.addEventListener('mouseleave',()=>cur.classList.remove('hov'))});
-window.addEventListener('load',()=>{const zh=document.getElementById('logoZh'),en=document.getElementById('logoEn');const zhW=zh.getBoundingClientRect().width;en.style.letterSpacing='0px';const enTxt=en.textContent.trim();const enW=en.scrollWidth;if(zhW>enW&&enTxt.length>1){const extra=(zhW-enW)/(enTxt.length-1);en.style.letterSpacing=extra+'px'}const fZh=document.getElementById('footerZh'),fEn=document.getElementById('footerEn');if(fZh&&fEn){fEn.style.letterSpacing='0px';const fZhW=fZh.getBoundingClientRect().width;const fEnTxt=fEn.textContent.trim();const fEnW=fEn.scrollWidth;if(fZhW>fEnW&&fEnTxt.length>1){fEn.style.letterSpacing=((fZhW-fEnW)/(fEnTxt.length-1))+'px'}}});
+window.addEventListener('load',()=>{
+  const zh=document.getElementById('logoZh'),en=document.getElementById('logoEn');
+  if(zh&&en){const enW=en.getBoundingClientRect().width;zh.style.letterSpacing='0px';const zhW=zh.scrollWidth;if(enW>zhW&&zh.textContent.trim().length>1){zh.style.letterSpacing=((enW-zhW)/(zh.textContent.trim().length-1))+'px'}}
+  const fZh=document.getElementById('footerZh'),fEn=document.getElementById('footerEn');
+  if(fZh&&fEn){const fEnW=fEn.getBoundingClientRect().width;fZh.style.letterSpacing='0px';const fZhW=fZh.scrollWidth;if(fEnW>fZhW&&fZh.textContent.trim().length>1){fZh.style.letterSpacing=((fEnW-fZhW)/(fZh.textContent.trim().length-1))+'px'}}
+});
+const ham=document.getElementById('navHamburger'),mob=document.getElementById('mobileMenu');
+if(ham&&mob){ham.addEventListener('click',()=>{ham.classList.toggle('open');mob.classList.toggle('open')});mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{ham.classList.remove('open');mob.classList.remove('open')}))}
+const ftop=document.getElementById('floatTop');
+if(ftop){window.addEventListener('scroll',()=>ftop.classList.toggle('visible',window.scrollY>300));ftop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}))}
 // Service tabs
 document.querySelectorAll('.svc-tab').forEach(tab=>{
   tab.addEventListener('mouseenter',()=>{
