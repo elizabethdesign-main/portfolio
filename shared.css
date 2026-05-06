@@ -98,7 +98,7 @@ nav.scrolled {
 .nav-links a {
   text-decoration: none; color: var(--ink);
   font-family: 'Noto Sans TC', sans-serif;
-  font-size: .68rem; letter-spacing: .06em;
+  font-size: .78rem; letter-spacing: .06em;
   position: relative; padding-bottom: 3px;
   transition: color .25s; opacity: .5;
 }
@@ -112,23 +112,31 @@ nav.scrolled {
 .nav-links a.active { opacity: 1; color: var(--ink); }
 .nav-links a.active::after { width: 100%; }
 
-/* ── 委託下單：無色塊，只有底線 ── */
+/* ── 委託下單：與其他連結相同樣式 ── */
 .nav-order {
-  opacity: 1 !important;
+  opacity: .5 !important;
   display: inline-flex; align-items: center;
   text-decoration: none !important;
-  color: var(--gold) !important;
-  font-size: .68rem !important;
+  color: var(--ink) !important;
+  font-size: .78rem !important;
   letter-spacing: .06em !important;
   background: none !important;
   border: none !important;
-  border-bottom: 1.5px solid var(--gold) !important;
-  padding: 0 0 2px !important;
-  transition: color .25s !important;
+  padding: 0 0 3px !important;
+  transition: color .25s, opacity .25s !important;
   white-space: nowrap;
+  position: relative;
 }
-.nav-order::after { display: none !important; }
-.nav-order:hover { color: var(--gold-d) !important; border-color: var(--gold-d) !important; }
+.nav-order::after {
+  content: '' !important; display: block !important;
+  position: absolute; bottom: 0; left: 0;
+  width: 0; height: 1px; background: var(--gold);
+  transition: width .4s var(--ease);
+}
+.nav-order:hover { opacity: 1 !important; color: var(--gold) !important; }
+.nav-order:hover::after { width: 100% !important; }
+.nav-order.active { opacity: 1 !important; color: var(--ink) !important; }
+.nav-order.active::after { width: 100% !important; }
 
 /* ════════════════
    FOOTER — 米白底金色調
@@ -145,9 +153,9 @@ nav.scrolled {
 }
 .footer-brand-logo {
   font-family: 'Noto Sans TC', sans-serif;
-  font-size: 1rem; font-weight: 400; letter-spacing: .12em;
-  color: var(--white); margin-bottom: .4rem;
-  display: block;
+  font-size: .88rem; font-weight: 400; letter-spacing: .12em;
+  color: var(--white); margin-bottom: .14rem;
+  display: block; line-height: 1.2;
 }
 .footer-brand-en {
   font-size: .5rem; text-transform: uppercase;
@@ -187,7 +195,7 @@ nav.scrolled {
    SHARED COMPONENTS
 ════════════════ */
 .s-label {
-  font-size: .56rem; letter-spacing: .35em; text-transform: uppercase;
+  font-size: .68rem; letter-spacing: .28em; text-transform: uppercase;
   color: var(--gold); margin-bottom: .8rem; display: block;
 }
 .s-title {
@@ -200,7 +208,7 @@ nav.scrolled {
   margin-bottom: 2.5rem;
 }
 .s-more {
-  font-size: .62rem; letter-spacing: .18em; text-transform: uppercase;
+  font-size: .74rem; letter-spacing: .12em; text-transform: uppercase;
   color: var(--gold); text-decoration: none;
   border-bottom: 1px solid var(--gold-line); padding-bottom: 2px;
   transition: color .25s, border-color .25s;
@@ -210,15 +218,15 @@ nav.scrolled {
 /* Buttons */
 .btn {
   display: inline-flex; align-items: center; gap: .55rem;
-  text-decoration: none; font-family: 'DM Sans', sans-serif;
-  font-size: .65rem; letter-spacing: .2em; text-transform: uppercase;
-  padding: .85rem 1.9rem; transition: all .35s var(--ease);
+  text-decoration: none; font-family: 'Noto Sans TC', sans-serif;
+  font-size: .78rem; letter-spacing: .12em;
+  padding: .9rem 2rem; transition: all .35s var(--ease);
   cursor: none; white-space: nowrap; border: none;
 }
-/* 主要按鈕：金底白字 */
-.btn-dark  { background: var(--gold); color: var(--white); }
-.btn-dark:hover { background: var(--gold-d); }
-/* 輪廓按鈕：金框金字 */
+/* 兩個按鈕統一：透明底金框金字，hover 填滿金色 */
+.btn-dark  { border: 1px solid var(--gold); color: var(--gold); background: none; }
+.btn-dark:hover { background: var(--gold); color: var(--white); }
+/* 輪廓按鈕：同上 */
 .btn-outline { border: 1px solid var(--gold); color: var(--gold); background: none; }
 .btn-outline:hover { background: var(--gold); color: var(--white); }
 /* 深色場合白框 */
@@ -259,7 +267,7 @@ nav.scrolled {
   line-height: 1.2; letter-spacing: .01em;
   opacity: 0; animation: fadeUp .85s var(--ease) .35s forwards;
 }
-.page-hero h1 em { font-style: italic; color: var(--gold); font-family: 'Cormorant Garamond', serif; }
+.page-hero h1 em { font-style: italic; color: var(--gold); font-family: 'Noto Sans TC', sans-serif; }
 .page-hero-sub {
   font-size: .82rem; color: var(--muted);
   margin-top: 1.2rem; line-height: 1.9; max-width: 520px;
