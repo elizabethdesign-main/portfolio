@@ -30,7 +30,9 @@
   width:22px;height:22px;border-radius:50%;
   background:var(--gold-line);color:var(--muted);
   display:flex;align-items:center;justify-content:center;
-  font-size:.62rem;font-weight:500;flex-shrink:0;transition:background .3s,color .3s;
+  font-size:.62rem;font-weight:500;flex-shrink:0;
+  transition:background .3s,color .3s;
+  font-style:normal;font-family:'Noto Sans TC',sans-serif;
 }
 .step-item.active .step-num{background:var(--gold);color:var(--white)}
 .step-item.active{color:var(--ink)}
@@ -125,14 +127,17 @@
   font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;
   color:var(--gold);margin-bottom:.9rem;font-weight:500;
 }
-.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem 1.2rem}
+.spec-grid{display:flex;flex-direction:column;gap:.6rem}
+.spec-field{width:100%}
+.spec-field-full{width:100%}
 .spec-field label{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.3rem}
-.spec-field input,.spec-field select{
+.spec-field input,.spec-field select,.spec-field textarea{
   width:100%;border:none;border-bottom:1px solid var(--gold-line);
-  padding:.5rem 0;font-family:'Noto Sans TC',sans-serif;font-size:.82rem;
+  padding:.5rem 0;font-family:'Noto Sans TC',sans-serif;font-size:.84rem;
   background:none;outline:none;color:var(--ink);transition:border-color .25s;appearance:none;
+  resize:none;line-height:1.7;
 }
-.spec-field input:focus,.spec-field select:focus{border-color:var(--gold)}
+.spec-field input:focus,.spec-field select:focus,.spec-field textarea:focus{border-color:var(--gold)}
 
 /* ── Cart ── */
 .cart{
@@ -287,12 +292,12 @@ footer.site-footer{margin-top:0}
     <!-- STEP 2 -->
     <div id="detailPanel" class="detail-form">
       <h2 class="form-section-title">填寫設計需求</h2>
-      <p class="form-section-sub">以下資訊將直接傳送到 LINE，請盡量填寫詳細。</p>
+      <p class="form-section-sub">標示 <span style="color:var(--gold)">*</span> 為必填，請盡量填寫詳細，讓我可以更快速報價。</p>
 
-      <!-- 基本資料 -->
+      <!-- 通用基本資訊 -->
       <div class="fg-row">
         <div class="fg">
-          <label>姓名<span class="req">*</span></label>
+          <label>聯絡人姓名<span class="req">*</span></label>
           <input type="text" id="f_name" placeholder="您的姓名"/>
         </div>
         <div class="fg">
@@ -301,27 +306,21 @@ footer.site-footer{margin-top:0}
         </div>
       </div>
 
-      <div class="fg">
-        <label>品牌 / 公司名稱<span class="req">*</span></label>
-        <input type="text" id="f_brand" placeholder="您的品牌或公司名稱"/>
-      </div>
-
-      <!-- 動態服務需求欄位（依選擇項目自動顯示） -->
-      <div id="specBlocks"></div>
-
-      <!-- 風格偏好 -->
-      <div class="fg">
-        <label>風格偏好</label>
-        <div class="radio-group" id="styleGroup">
-          <div class="radio-opt" data-val="簡約清新">簡約清新</div>
-          <div class="radio-opt" data-val="溫暖自然">溫暖自然</div>
-          <div class="radio-opt" data-val="活潑繽紛">活潑繽紛</div>
-          <div class="radio-opt" data-val="高質感深色系">高質感深色系</div>
-          <div class="radio-opt" data-val="插畫手繪風">插畫手繪風</div>
-          <div class="radio-opt" data-val="現代商業感">現代商業感</div>
+      <div class="fg-row">
+        <div class="fg">
+          <label>品牌名稱<span class="req">*</span></label>
+          <input type="text" id="f_brand" placeholder="品牌或公司名稱"/>
+        </div>
+        <div class="fg">
+          <label>行業別<span class="req">*</span></label>
+          <input type="text" id="f_industry" placeholder="例如：餐飲、美妝、教育、電商"/>
         </div>
       </div>
 
+      <!-- 各服務動態需求欄位 -->
+      <div id="specBlocks"></div>
+
+      <!-- 完成日期 / 預算 -->
       <div class="fg-row">
         <div class="fg">
           <label>希望完成日期</label>
@@ -349,7 +348,7 @@ footer.site-footer{margin-top:0}
 
       <div class="fg">
         <label>其他需求說明</label>
-        <textarea id="f_desc" placeholder="其他補充說明、參考圖連結、特殊需求等…"></textarea>
+        <textarea id="f_desc" placeholder="其他補充說明、特殊需求等…"></textarea>
       </div>
 
       <div style="display:flex;gap:.8rem;margin-top:.5rem">
@@ -454,28 +453,81 @@ const serviceNames={
 /* 各服務的動態詢問欄位 */
 const serviceSpecs={
   publication:{
-    label:'刊物設計 — 詳細規格',
+    label:'刊物設計',
     fields:[
-      {id:'pub_pages',label:'頁數',type:'input',placeholder:'例如：20 頁'},
-      {id:'pub_size',label:'尺寸',type:'input',placeholder:'例如：A4、A5、21x21cm'},
-      {id:'pub_print',label:'是否需要印刷',type:'select',options:['不需要','需要，請報價']},
-      {id:'pub_qty',label:'印刷數量',type:'input',placeholder:'例如：100 份（不印刷請留空）'},
+      {id:'pub_type',    label:'刊物類型',         req:true,  type:'input', placeholder:'例如：企業年報、品牌手冊、菜單、雜誌'},
+      {id:'pub_pages',   label:'預計總頁數',        req:true,  type:'input', placeholder:'例如：12頁、24頁'},
+      {id:'pub_output',  label:'輸出需求',         req:false, type:'select', options:['僅需電子檔','需協助發包印刷','兩者都需要']},
+      {id:'pub_size',    label:'成品尺寸與裝訂方式', req:false, type:'input', placeholder:'例如：A4、左翻/右翻、騎馬釘/膠裝'},
+      {id:'pub_material',label:'素材提供狀況',      req:true,  type:'select', options:['已有文案與高解析度照片','只有文案，需協助選圖','兩者皆無，需全程協助']},
+      {id:'pub_style',   label:'風格偏好關鍵字',    req:false, type:'input', placeholder:'例如：簡約、日系、美式復古、高質感'},
+      {id:'pub_ref',     label:'參考範例連結',      req:false, type:'input', placeholder:'Pinterest、IG 或其他連結'},
     ]
   },
   social:{
-    label:'社群圖片 — 詳細規格',
+    label:'社群圖片',
     fields:[
-      {id:'soc_qty',label:'張數',type:'input',placeholder:'例如：6 張'},
-      {id:'soc_size',label:'尺寸 / 平台',type:'input',placeholder:'例如：1:1 IG 貼文、9:16 限時動態'},
+      {id:'soc_platform',label:'發布平台',     req:true,  type:'input', placeholder:'例如：FB、IG Post/Story、LINE 官方帳號'},
+      {id:'soc_qty',     label:'需求張數',     req:true,  type:'input', placeholder:'例如：單張 / 系列 6 張'},
+      {id:'soc_material',label:'素材提供狀況', req:true,  type:'select', options:['已有文案與高解析度照片','只有文案，需協助選圖','兩者皆無，需全程協助']},
+      {id:'soc_style',   label:'風格偏好關鍵字',req:false,type:'input', placeholder:'例如：簡約、日系、美式復古、高質感'},
+      {id:'soc_ref',     label:'參考範例連結', req:false, type:'input', placeholder:'Pinterest、IG 或其他連結'},
     ]
   },
   poster:{
-    label:'DM 海報設計 — 詳細規格',
+    label:'DM 海報設計',
     fields:[
-      {id:'pos_qty',label:'張數（版本數）',type:'input',placeholder:'例如：2 款'},
-      {id:'pos_size',label:'尺寸',type:'input',placeholder:'例如：A4、A3、DL'},
-      {id:'pos_print',label:'是否需要印刷',type:'select',options:['不需要','需要，請報價']},
-      {id:'pos_pqty',label:'印刷數量',type:'input',placeholder:'例如：500 份（不印刷請留空）'},
+      {id:'pos_size',    label:'設計尺寸',     req:true,  type:'input', placeholder:'例如：A4、A3、全開'},
+      {id:'pos_side',    label:'單/雙面設計',  req:true,  type:'select', options:['單面海報','雙面 DM']},
+      {id:'pos_material',label:'素材提供狀況', req:true,  type:'select', options:['已有文案與高解析度照片','只有文案，需協助選圖','兩者皆無，需全程協助']},
+      {id:'pos_style',   label:'風格偏好關鍵字',req:false,type:'input', placeholder:'例如：簡約、日系、美式復古、高質感'},
+      {id:'pos_ref',     label:'參考範例連結', req:false, type:'input', placeholder:'Pinterest、IG 或其他連結'},
+    ]
+  },
+  banner:{
+    label:'廣告 Banner 設計',
+    fields:[
+      {id:'ban_platform',label:'投放平台',         req:true,  type:'input', placeholder:'例如：Google GDN、FB 廣告、LAP、官網首頁'},
+      {id:'ban_size',    label:'所需尺寸規格',      req:true,  type:'input', placeholder:'例如：1200x628px、1080x1080px'},
+      {id:'ban_motion',  label:'動態要求',         req:true,  type:'select', options:['靜態圖','GIF 動態','兩者都需要']},
+      {id:'ban_cta',     label:'行動呼籲 (CTA)',   req:false, type:'input', placeholder:'例如：立即購買、了解更多、限時優惠'},
+      {id:'ban_material',label:'素材提供狀況',      req:true,  type:'select', options:['已有文案與高解析度照片','只有文案，需協助選圖','兩者皆無，需全程協助']},
+      {id:'ban_style',   label:'風格偏好關鍵字',    req:false, type:'input', placeholder:'例如：簡約、日系、美式復古、高質感'},
+      {id:'ban_ref',     label:'參考範例連結',      req:false, type:'input', placeholder:'Pinterest、IG 或其他連結'},
+    ]
+  },
+  product:{
+    label:'商品說明頁設計',
+    fields:[
+      {id:'prd_platform',label:'上架平台',         req:true,  type:'input', placeholder:'例如：蝦皮、Momo、品牌官網一頁商店'},
+      {id:'prd_usp',     label:'產品賣點 (USP)',   req:true,  type:'textarea', placeholder:'請條列 3-5 個必須強調的功能或特色'},
+      {id:'prd_img',     label:'素材完備度（圖片）', req:true,  type:'select', options:['有產品去背圖與情境圖','只有商品原圖','尚無任何素材']},
+      {id:'prd_copy',    label:'文案完備度',        req:true,  type:'select', options:['文案已完稿','需設計師協助潤飾','需全程撰寫']},
+      {id:'prd_length',  label:'頁面長度預期',      req:false, type:'select', options:['長圖式詳解','短捷精鍊排版','不確定，聽設計師建議']},
+      {id:'prd_style',   label:'風格偏好關鍵字',    req:false, type:'input', placeholder:'例如：簡約、日系、美式復古、高質感'},
+      {id:'prd_ref',     label:'參考範例連結',      req:false, type:'input', placeholder:'Pinterest、IG 或其他連結'},
+    ]
+  },
+  illustration:{
+    label:'插畫委託',
+    fields:[
+      {id:'ill_usage',   label:'插畫用途',     req:true,  type:'input', placeholder:'例如：網站首頁配圖、產品包裝、角色IP設計'},
+      {id:'ill_license', label:'授權範圍',     req:true,  type:'select', options:['個人收藏','商業使用','買斷所有權']},
+      {id:'ill_color',   label:'配色限制',     req:true,  type:'input', placeholder:'是否有品牌標準色或禁忌色？'},
+      {id:'ill_detail',  label:'完稿細緻度',   req:true,  type:'select', options:['簡約線條','厚塗風格','扁平化設計','不確定，請建議']},
+      {id:'ill_style',   label:'風格偏好關鍵字',req:false,type:'input', placeholder:'例如：簡約、日系、美式復古、高質感'},
+      {id:'ill_ref',     label:'參考範例連結', req:false, type:'input', placeholder:'Pinterest、IG 或其他連結'},
+    ]
+  },
+  logo:{
+    label:'Logo 設計',
+    fields:[
+      {id:'logo_type',   label:'標準字要求',   req:true,  type:'select', options:['純圖像','純文字','圖文組合標誌']},
+      {id:'logo_story',  label:'品牌理念/故事', req:true,  type:'textarea', placeholder:'希望 Logo 傳達出什麼樣的精神？'},
+      {id:'logo_usage',  label:'應用情境',     req:true,  type:'input', placeholder:'例如：名片、招牌、App Icon'},
+      {id:'logo_name',   label:'中英文名稱需求', req:true, type:'select', options:['僅中文','僅英文','中英文都需要']},
+      {id:'logo_style',  label:'風格偏好關鍵字',req:false,type:'input', placeholder:'例如：簡約、日系、美式復古、高質感'},
+      {id:'logo_ref',    label:'參考範例連結', req:false, type:'input', placeholder:'Pinterest、IG 或其他連結'},
     ]
   },
 };
@@ -520,17 +572,19 @@ function renderSpecBlocks(){
     const spec=serviceSpecs[id];
     const block=document.createElement('div');
     block.className='service-spec';
-    block.innerHTML=`<div class="spec-title">✦ ${spec.label}</div><div class="spec-grid">${
+    block.innerHTML=`<div class="spec-title">${spec.label} — 詳細需求</div>${
       spec.fields.map(f=>`
-        <div class="spec-field">
-          <label>${f.label}</label>
+        <div class="spec-field spec-field-full">
+          <label>${f.label}${f.req?'<span class="req">*</span>':''}</label>
           ${f.type==='select'
             ?`<select id="${f.id}">${f.options.map(o=>`<option>${o}</option>`).join('')}</select>`
+            :f.type==='textarea'
+            ?`<textarea id="${f.id}" placeholder="${f.placeholder||''}" rows="3"></textarea>`
             :`<input type="text" id="${f.id}" placeholder="${f.placeholder||''}"/>`
           }
         </div>
       `).join('')
-    }</div>`;
+    }`;
     container.appendChild(block);
   });
 }
@@ -591,64 +645,75 @@ document.getElementById('sendLineBtn').addEventListener('click', async ()=>{
   const name=document.getElementById('f_name').value.trim();
   const contact=document.getElementById('f_contact').value.trim();
   const brand=document.getElementById('f_brand').value.trim();
-  if(!name||!contact||!brand){showToast('請填寫姓名、電話與品牌名稱 ✕');return;}
+  const industry=document.getElementById('f_industry')?.value.trim()||'';
+  if(!name||!contact||!brand){showToast('請填寫姓名、電話與品牌名稱');return;}
 
   /* Cart */
-  const cartLines=[...cart].map(id=>`  • ${serviceNames[id]}`).join('\n');
+  const cartLines=[...cart].map(id=>`- ${serviceNames[id]}`).join('\n');
 
   /* Spec blocks */
   let specText='';
   cart.forEach(id=>{
     if(!serviceSpecs[id]) return;
     const spec=serviceSpecs[id];
-    specText+=`\n【${serviceNames[id]}規格】\n`;
+    specText+=`\n[${spec.label}]\n`;
     spec.fields.forEach(f=>{
       const el=document.getElementById(f.id);
-      if(el&&el.value) specText+=`  ${f.label}：${el.value}\n`;
+      if(el&&el.value.trim()) specText+=`${f.label}：${el.value.trim()}\n`;
     });
   });
 
-  const style=document.querySelector('#styleGroup .radio-opt.on')?.dataset.val||'未填寫';
   const date=document.getElementById('f_date').value||'無限制';
   const budget=document.getElementById('f_budget').value||'不確定，請報價';
   const desc=document.getElementById('f_desc').value.trim()||'無';
 
-  const msg=
-`📋 ESD 設計委託需求
+  // 純文字版（無 emoji）
+  const plainMsg=
+`ESD 設計委託需求
 
-👤 姓名：${name}
-📞 電話：${contact}
-🏷️ 品牌／公司：${brand}
+姓名：${name}
+電話：${contact}
+品牌名稱：${brand}
+行業別：${industry||'未填寫'}
 
-📦 委託項目：
+委託項目：
 ${cartLines}
 ${specText}
-🎨 風格偏好：${style}
-📅 希望完成：${date}
-💰 預算範圍：${budget}
+希望完成：${date}
+預算範圍：${budget}
 
-📝 其他需求說明：
+其他需求說明：
 ${desc}
 
-──────────────────
 請問方便報價嗎？謝謝！`;
 
   setStep(3);
-  const encoded = encodeURIComponent(msg);
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  // 寄 Email 通知（Formspree）
+  // ★ 替換 YOUR_FORM_ID 為你的 Formspree ID
+  const FORM_ID = 'YOUR_FORM_ID';
+  if(FORM_ID !== 'YOUR_FORM_ID'){
+    fetch(`https://formspree.io/f/${FORM_ID}`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify({
+        name, phone: contact, brand,
+        services: [...cart].map(id=>serviceNames[id]).join('、'),
+        style, date, budget, desc,
+        _subject: `ESD 新委託：${name} - ${[...cart].map(id=>serviceNames[id]).join('、')}`,
+      })
+    }).catch(()=>{});
+  }
 
   if(isMobile){
-    // 手機：line:// 深層連結直接開 app，帶入預填訊息
-    window.location.href = 'line://oaMessage/%40eds786/?' + encoded;
+    // 手機：跳轉 LINE app
+    window.location.href = 'line://oaMessage/%40eds786/?' + encodeURIComponent(plainMsg);
   } else {
-    // 桌機：lin.ee 短網址直接進 OA 對話 + 複製訊息到剪貼簿
-    try{
-      await navigator.clipboard.writeText(msg);
-      showToast('需求已複製！進入 LINE 後請貼上訊息送出 📋');
-    } catch(e){
-      showToast('請進入 LINE 後手動貼上需求內容');
-    }
-    setTimeout(()=>window.open('https://lin.ee/ocDYK0A','_blank'), 500);
+    // 桌機：直接開啟 LINE OA 頁面 + 複製內容到剪貼簿
+    try{ await navigator.clipboard.writeText(plainMsg); }catch(e){}
+    showToast('需求已複製！進入 LINE 後請貼上送出');
+    setTimeout(()=>window.open('https://lin.ee/ocDYK0A','_blank'), 400);
   }
 });
 
